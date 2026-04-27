@@ -22,6 +22,18 @@ from services.ai_analyzer import analyze_content
 from services.report_generator import ReportGenerator
 from models.review import ReviewReport
 
+# 确保 Streamlit 环境下 API Key 生效
+# Streamlit 会自动加载 .streamlit/secrets.toml 到 st.secrets
+# 但 settings.py 可能在 st.secrets 初始化前就加载了，导致 Key 为空
+if not settings.DEEPSEEK_API_KEY:
+    try:
+        _key = st.secrets.get("DEEPSEEK_API_KEY", "")
+        if _key:
+            settings.DEEPSEEK_API_KEY = _key
+            settings.AI_ENABLED = True
+    except Exception:
+        pass
+
 st.set_page_config(
     page_title="经营分析会资料审核",
     page_icon="📋",
