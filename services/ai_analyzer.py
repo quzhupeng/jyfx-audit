@@ -1,12 +1,10 @@
-"""AI 分析器 — 基于 Claude API 的内容质量分析."""
+"""AI 分析器 — 支持 DeepSeek（OpenAI兼容）和 Anthropic 的内容质量分析."""
 
 from __future__ import annotations
 
 import json
 import re
 from typing import List, Optional, Tuple
-
-from anthropic import Anthropic
 
 from models.business_context import BusinessContext
 from models.document import ParsedDocument
@@ -116,13 +114,55 @@ def _parse_ai_response(response_text: str) -> Tuple[List[AIDimension], float, st
     return dimensions, overall, summary, risk_warnings
 
 
+def _call_deepseek(
+    system_prompt: str,
+    user_message: str,
+    api_key: Optional[str] = None,
+) -> str:
+    """调用 DeepSeek API（OpenAI 兼容接口）."""
+    from openai import OpenAI
+
+    key = api_key or settings.DEEPSEEK_API_KEY
+    client = OpenAI(api_key=key, base_url=settings.DEEPSEEK_BASE_URL)
+    response = client.chat.completions.create(
+        model=settings.DEEPSEEK_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message},
+        ],
+        max_tokens=2048,
+    )
+    return response.choices[0].message.content
+
+
+def _call_anthropic(
+    system_prompt: str,
+    user_message: str,
+    api_key: Optional[str] = None,
+) -> str:
+    """调用 Anthropic API."""
+    from anthropic import Anthropic
+
+    key = api_key or settings.ANTHROPIC_API_KEY
+    client = Anthropic(api_key=key)
+    response = client.messages.create(
+        model=settings.ANTHROPIC_MODEL,
+        max_tokens=2048,
+        system=system_prompt,
+        messages=[{"role": "user", "content": user_message}],
+    )
+    return response.content[0].text
+
+
 def analyze_content(
     doc: ParsedDocument,
     section_map: Optional[SectionMap] = None,
     context: Optional[BusinessContext] = None,
     api_key: Optional[str] = None,
 ) -> AIReport:
-    """调用 Claude API 分析内容质量.
+    """调用 AI API 分析内容质量.
+
+    根据settings.AI_PROVIDER选择DeepSeek或Anthropic。
 
     Args:
         doc: 解析后的文档
@@ -133,26 +173,37 @@ def analyze_content(
     Returns:
         AIReport 对象
     """
-    key = api_key or settings.ANTHROPIC_API_KEY
-    if not key:
+    provider = settings.AI_PROVIDER
+
+    # 检查对应 provider 的 key
+    if provider == "deepseek":
+        key = api_key or settings.DEEPSEEK_API_KEY
+        if not key:
+            return AIReport(
+                available=False,
+                error_message="未配置 DEEPSEEK_API_KEY，AI 分析不可用",
+            )
+    elif provider == "anthropic":
+        key = api_key or settings.ANTHROPIC_API_KEY
+        if not key:
+            return AIReport(
+                available=False,
+                error_message="未配置 ANTHROPIC_API_KEY，AI 分析不可用",
+            )
+    else:
         return AIReport(
             available=False,
-            error_message="未配置 ANTHROPIC_API_KEY，AI 分析不可用",
+            error_message=f"不支持的 AI 提供商: {provider}",
         )
 
     try:
-        client = Anthropic(api_key=key)
         system_prompt = _build_system_prompt(context)
         user_message = _build_user_prompt(doc, section_map)
 
-        response = client.messages.create(
-            model=settings.ANTHROPIC_MODEL,
-            max_tokens=2048,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_message}],
-        )
-
-        response_text = response.content[0].text
+        if provider == "deepseek":
+            response_text = _call_deepseek(system_prompt, user_message, api_key)
+        else:
+            response_text = _call_anthropic(system_prompt, user_message, api_key)
 
         dimensions, overall, summary, risks = _parse_ai_response(response_text)
 

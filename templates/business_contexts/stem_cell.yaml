@@ -1,0 +1,62 @@
+department: "干细胞研究院"
+description: "负责干细胞技术的基础研究、临床转化和产学研合作的专业研究机构"
+business_thread: "课题立项→基础研究→技术攻关→临床实验→成果转化→产学研合作"
+
+focus_areas:
+  - area: "研究进展"
+    weight: 1.5
+    kpis:
+      - name: "课题推进率"
+        direction: "higher_better"
+        description: "按计划节点推进的研究课题占比"
+      - name: "里程碑达成率"
+        direction: "higher_better"
+        description: "各研究项目关键里程碑的达成情况"
+      - name: "实验完成量"
+        direction: "higher_better"
+        description: "完成的实验批次和测试项目数量"
+  - area: "成果产出"
+    weight: 1.4
+    kpis:
+      - name: "论文发表数"
+        direction: "higher_better"
+        description: "在学术期刊发表的论文数量和质量"
+      - name: "专利申请数"
+        direction: "higher_better"
+        description: "新申请的技术专利数量"
+      - name: "成果转化项目数"
+        direction: "higher_better"
+        description: "进入临床转化或产业化阶段的项目数"
+  - area: "合作与资源"
+    weight: 1.1
+    kpis:
+      - name: "产学研合作项目数"
+        direction: "higher_better"
+        description: "与高校/医院/企业的合作项目数量"
+      - name: "外部资金引入"
+        direction: "higher_better"
+        description: "获得的科研拨款、合作资金等外部资金"
+
+risk_factors:
+  - name: "关键课题延期"
+    severity: "high"
+    threshold: "核心研究课题延期 > 2个月"
+  - name: "成果转化停滞"
+    severity: "high"
+    threshold: "连续6个月无新的转化项目"
+  - name: "科研人才流失"
+    severity: "medium"
+    threshold: "核心研究人员离职"
+
+analysis_prompt_extension: |
+  干细胞研究院的核心职能是干细胞技术的基础研究和临床转化。审核经营分析资料时需要特别关注：
+  1. **研究进展**：各课题的推进状态、关键里程碑达成、延期原因
+  2. **实验管理**：实验计划与执行、数据质量和可重复性
+  3. **成果产出**：论文、专利、技术标准等硬性成果指标
+  4. **临床转化**：从基础研究到临床应用的推进情况和瓶颈
+  5. **产学研生态**：合作网络建设、外部资源获取、行业影响力
+
+  常见质量问题：
+  - 研究进展描述过于笼统，缺乏具体里程碑和量化指标
+  - 实验数据只有数量，缺乏质量评估和统计分析
+  - 成果转化缺乏路径规划和时间节点

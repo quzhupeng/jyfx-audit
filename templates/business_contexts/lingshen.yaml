@@ -1,0 +1,62 @@
+department: "领参"
+description: "负责人参产品的采购、加工、品牌运营与销售的业务部门"
+business_thread: "参源采购→加工炮制→品质检测→品牌包装→渠道铺货→终端销售"
+
+focus_areas:
+  - area: "采购与供应链"
+    weight: 1.5
+    kpis:
+      - name: "原料采购成本"
+        direction: "lower_better"
+        description: "人参原料的平均采购单价"
+      - name: "供应商合格率"
+        direction: "higher_better"
+        description: "符合品质标准的供应商占比"
+      - name: "采购及时率"
+        direction: "higher_better"
+        description: "按计划完成采购的比率"
+  - area: "产品与品牌"
+    weight: 1.3
+    kpis:
+      - name: "产品合格率"
+        direction: "higher_better"
+        description: "通过品质检测的产品批次占比"
+      - name: "品牌知名度"
+        direction: "higher_better"
+        description: "市场调研中的品牌认知度"
+  - area: "销售与渠道"
+    weight: 1.4
+    kpis:
+      - name: "销售目标达成率"
+        direction: "higher_better"
+        description: "实际销售额与目标的比率"
+      - name: "渠道覆盖率"
+        direction: "higher_better"
+        description: "已覆盖销售渠道占目标渠道的比率"
+      - name: "客户复购率"
+        direction: "higher_better"
+        description: "老客户再次购买的比率"
+
+risk_factors:
+  - name: "原料价格波动"
+    severity: "high"
+    threshold: "采购成本环比波动 > 20%"
+  - name: "品质问题"
+    severity: "high"
+    threshold: "产品不合格率 > 5%"
+  - name: "渠道拓展停滞"
+    severity: "medium"
+    threshold: "连续2月无新增渠道"
+
+analysis_prompt_extension: |
+  领参部门的核心业务是人参产品从采购到销售的全链路管理。审核经营分析资料时需要特别关注：
+  1. **供应链管理**：采购成本变化、供应商管理、原料品质管控
+  2. **加工品质**：产品合格率、加工效率、品质检测标准执行
+  3. **品牌运营**：品牌推广投入与效果、市场认知度变化
+  4. **渠道销售**：各渠道销售占比、新渠道拓展、终端动销数据
+  5. **成本结构**：采购→加工→销售的各环节成本分析和优化空间
+
+  常见质量问题：
+  - 缺乏采购成本变化的根因分析（产地、季节、供需）
+  - 品质问题只报数量未分析原因和改善措施
+  - 渠道数据只有总量，缺乏各渠道的深度分析

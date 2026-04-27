@@ -157,6 +157,7 @@ def load_business_context(department: str) -> BusinessContext:
     return BusinessContext(
         department=data.get("department", department),
         description=data.get("description", ""),
+        business_thread=data.get("business_thread", ""),
         focus_areas=tuple(
             _parse_focus_area(fa) for fa in data.get("focus_areas", [])
         ),

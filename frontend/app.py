@@ -42,36 +42,48 @@ with st.sidebar:
         departments,
         format_func=lambda x: {
             "direct_sales": "直销事业部",
+            "beauty": "美业事业部",
+            "digital_marketing": "数字营销",
+            "finance": "财务部",
+            "lingshen": "领参",
+            "audit": "纪审部",
             "raw_materials": "原材料事业部",
-            "cultural_tourism": "文旅事业部",
             "private_domain": "私域事业部",
+            "management_center": "管理中心",
+            "rd_center": "研发中心",
+            "stem_cell": "干细胞研究院",
             "foreign_trade": "外贸事业部",
+            "production": "生产中心",
             "default": "默认（未配置）",
         }.get(x, x),
     )
 
-    # 显示事业部简介
+    # 显示业务主脉络和核心指标
     if department != "default":
         ctx = loader.load_business_context(department)
-        if ctx.description:
-            with st.expander("📖 事业部简介"):
-                st.write(ctx.description)
-        if ctx.risk_factors:
-            with st.expander("⚠️ 常见风险"):
-                for rf in ctx.risk_factors:
-                    st.markdown(f"- **{rf.name}** [{rf.severity}]: {rf.threshold}")
+        if ctx.business_thread:
+            with st.expander("🔗 业务主脉络"):
+                st.write(ctx.business_thread)
+        if ctx.focus_areas:
+            with st.expander("📊 核心指标"):
+                for fa in ctx.focus_areas:
+                    st.markdown(f"**{fa.area}**")
+                    for kpi in fa.kpis:
+                        st.caption(f"  - {kpi.name}")
+                    st.write("")
 
     st.divider()
 
     # AI 分析开关
+    ai_available = bool(settings.DEEPSEEK_API_KEY) or bool(settings.ANTHROPIC_API_KEY)
     ai_enabled = st.checkbox(
-        "启用 AI 内容分析",
-        value=bool(settings.ANTHROPIC_API_KEY),
-        disabled=not bool(settings.ANTHROPIC_API_KEY),
-        help="需要配置 ANTHROPIC_API_KEY 环境变量",
+        "启用 DeepSeek AI 分析",
+        value=ai_available,
+        disabled=not ai_available,
+        help="需要配置 DEEPSEEK_API_KEY 环境变量",
     )
-    if not settings.ANTHROPIC_API_KEY:
-        st.caption("💡 设置 ANTHROPIC_API_KEY 环境变量以启用 AI 分析")
+    if not ai_available:
+        st.caption("💡 设置 DEEPSEEK_API_KEY 环境变量以启用 AI 分析")
 
     st.divider()
     st.caption(
@@ -300,7 +312,7 @@ with tab3:
     elif ai_report and ai_report.error_message:
         st.warning(f"AI 分析不可用: {ai_report.error_message}")
     else:
-        st.info("AI 分析未启用。请在侧边栏开启或在环境变量中设置 ANTHROPIC_API_KEY。")
+        st.info("AI 分析未启用。请在侧边栏开启或在环境变量中设置 DEEPSEEK_API_KEY。")
 
 # Tab 4: 文档信息
 with tab4:

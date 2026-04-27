@@ -1,0 +1,62 @@
+department: "数字营销"
+description: "通过线上渠道和数字化手段进行品牌推广、线索获取与客户转化的业务部门"
+business_thread: "渠道投放→内容运营→线索获取→数据分析→策略优化→ROI提升"
+
+focus_areas:
+  - area: "投放效果"
+    weight: 1.5
+    kpis:
+      - name: "ROI（投入产出比）"
+        direction: "higher_better"
+        description: "广告投放带来的收入与投入的比率"
+      - name: "获客成本（CPA）"
+        direction: "lower_better"
+        description: "获取单个有效线索/客户的平均成本"
+      - name: "点击率（CTR）"
+        direction: "higher_better"
+        description: "广告点击量与曝光量的比率"
+  - area: "内容与运营"
+    weight: 1.2
+    kpis:
+      - name: "粉丝增长率"
+        direction: "higher_better"
+        description: "各平台粉丝/关注者的增长速率"
+      - name: "内容互动率"
+        direction: "higher_better"
+        description: "点赞、评论、分享等互动指标"
+      - name: "私域引流率"
+        direction: "higher_better"
+        description: "从公域平台引流到私域池的转化率"
+  - area: "线索质量"
+    weight: 1.3
+    kpis:
+      - name: "有效线索数"
+        direction: "higher_better"
+        description: "符合质量标准的营销线索数量"
+      - name: "线索到成交转化率"
+        direction: "higher_better"
+        description: "线索最终转化为实际销售的比率"
+
+risk_factors:
+  - name: "投放ROI持续下滑"
+    severity: "high"
+    threshold: "连续2月ROI下降 > 20%"
+  - name: "渠道依赖过度集中"
+    severity: "medium"
+    threshold: "单一渠道贡献 > 70%线索"
+  - name: "获客成本飙升"
+    severity: "high"
+    threshold: "CPA环比增长 > 30%"
+
+analysis_prompt_extension: |
+  数字营销部门的核心业务是通过线上渠道和数字化手段获取线索并驱动转化。审核经营分析资料时需要特别关注：
+  1. **投放效率分析**：各渠道ROI对比、成本趋势、预算分配合理性
+  2. **内容运营数据**：内容产出频率、互动率、粉丝增长趋势
+  3. **线索全链路追踪**：从曝光→点击→留资→跟进→成交的完整漏斗
+  4. **渠道策略**：多渠道布局是否合理，是否存在过度依赖单一渠道
+  5. **数据驱动决策**：是否有A/B测试结果、用户画像分析等深度数据
+
+  常见质量问题：
+  - 只有投放总量数据，缺乏各渠道ROI对比分析
+  - 线索数量与质量未区分，缺乏线索转化链路分析
+  - 策略调整缺乏数据支撑，凭感觉优化

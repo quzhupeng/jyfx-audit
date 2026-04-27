@@ -49,6 +49,7 @@ class BusinessContext(BaseModel):
 
     department: str = Field(description="事业部名称")
     description: str = Field(default="", description="事业部简介")
+    business_thread: str = Field(default="", description="业务主脉络简写，用于前端展示")
     focus_areas: Tuple[FocusArea, ...] = Field(
         default_factory=tuple, description="关注领域列表"
     )
@@ -70,6 +71,8 @@ class BusinessContext(BaseModel):
     def to_prompt_text(self) -> str:
         """生成注入 Claude prompt 的业务背景文本."""
         parts = [f"## {self.department}\n"]
+        if self.business_thread:
+            parts.append(f"**业务主脉络**: {self.business_thread}\n")
         if self.description:
             parts.append(f"{self.description}\n")
 

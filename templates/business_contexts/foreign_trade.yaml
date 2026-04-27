@@ -1,91 +1,65 @@
 department: "外贸事业部"
-description: "外贸事业部负责海外市场的产品出口贸易业务，涵盖海外客户开发、订单管理、跨境物流、外汇风险管理等环节。"
+description: "负责集团产品出口、国际市场开拓和跨境贸易的业务部门"
+business_thread: "市场开拓→客户开发→订单管理→生产协调→跨境物流→回款结算"
 
 focus_areas:
-  - area: "销售业绩"
+  - area: "出口业绩"
     weight: 1.5
     kpis:
-      - name: "出口额"
+      - name: "出口销售额"
         direction: "higher_better"
-        description: "总体出口金额"
-      - name: "订单量"
+        description: "外贸出口的总销售收入"
+      - name: "出口目标达成率"
         direction: "higher_better"
+        description: "实际出口额与目标的比率"
+      - name: "新市场开拓数"
+        direction: "higher_better"
+        description: "新进入的国家/地区市场数量"
+  - area: "客户管理"
+    weight: 1.3
+    kpis:
       - name: "新客户开发数"
         direction: "higher_better"
-      - name: "目标达成率"
+        description: "新开发的海外客户数量"
+      - name: "客户留存率"
         direction: "higher_better"
-  - area: "客户与市场"
+        description: "持续合作的海外客户占比"
+      - name: "大客户贡献占比"
+        direction: "stable"
+        description: "TOP10客户占出口额的比例"
+  - area: "订单与交付"
     weight: 1.2
     kpis:
-      - name: "客户集中度"
-        direction: "lower_better"
-      - name: "新市场渗透率"
+      - name: "订单准时交付率"
         direction: "higher_better"
-      - name: "客户复购率"
-        direction: "higher_better"
-  - area: "成本与风险"
-    weight: 1.2
-    kpis:
-      - name: "汇率损失率"
+        description: "按合同约定时间完成交付的比率"
+      - name: "回款周期"
         direction: "lower_better"
-      - name: "物流成本率"
-        direction: "lower_better"
-      - name: "退单率"
-        direction: "lower_better"
-
-terminology:
-  - "外贸"
-  - "出口"
-  - "订单"
-  - "汇率"
-  - "关税"
-  - "信用证"
-  - "FOB"
-  - "CIF"
-  - "提单"
-  - "报关"
-  - "跨境"
-  - "海外仓"
-
-content_expectations:
-  - "分市场/分区域的销售数据"
-  - "汇率波动对利润的影响分析"
-  - "主要客户/订单分析"
-  - "新客户开发进展与渠道"
-  - "跨境物流时效与成本分析"
-  - "国际贸易政策变化影响评估"
+        description: "从发货到收款的平均周期"
+      - name: "汇率损益"
+        direction: "stable"
+        description: "汇率波动对利润的影响"
 
 risk_factors:
-  - name: "汇率风险"
+  - name: "大客户流失"
     severity: "high"
-    threshold: "汇率波动导致利润损失 > 3%"
-    description: "本币升值对出口利润的侵蚀"
-  - name: "客户集中风险"
+    threshold: "TOP5客户流失或订单量大幅下滑"
+  - name: "回款风险"
     severity: "high"
-    threshold: "TOP3客户占比 > 50%"
-    description: "大客户流失对业绩的影响巨大"
+    threshold: "逾期应收款占比 > 20%"
   - name: "贸易政策风险"
     severity: "medium"
-    threshold: "主要出口国关税/政策变化"
-    description: "贸易摩擦或关税调整影响出口竞争力"
-  - name: "物流稳定性"
-    severity: "medium"
-    threshold: "订单延期交付率 > 10%"
-    description: "海运/空运延误影响客户满意度和回款"
+    threshold: "目标市场出现重大贸易政策变化"
 
 analysis_prompt_extension: |
-  ## 外贸事业部背景
-
-  外贸事业部的核心是海外市场拓展和贸易风险管理。审核经营分析资料时，需重点关注：
-
-  1. **市场分散度**：是否过度依赖单一市场或单一客户
-  2. **汇率影响**：是否有明确的外汇风险对冲策略和实际效果
-  3. **客户开发**：新客户来源渠道和转化周期
-  4. **订单质量**：订单利润率和回款周期分析
-  5. **物流成本**：不同线路/方式的物流成本对比
+  外贸事业部的核心业务是集团产品的出口销售和国际市场开拓。审核经营分析资料时需要特别关注：
+  1. **市场布局**：出口国家/地区分布、新市场开拓进展、市场多元化程度
+  2. **客户结构**：客户集中度、新客户开发效率、大客户维护情况
+  3. **订单交付**：从接单到交付的全流程效率、品质问题、物流成本
+  4. **汇率与风险**：汇率波动影响、贸易政策风险、信用风险管理
+  5. **产品竞争力**：各产品线在不同市场的表现、竞品对比
 
   常见质量问题：
-  - 汇率影响没有量化分析
-  - 只关注订单量不关注订单利润率和回款质量
-  - 缺少国际形势和政策变化的应对措施
-  - 客户分析停留在总量，没有分层和趋势
+  - 缺乏分国家/地区的市场分析
+  - 客户开发只有数量，缺乏质量（订单量/利润率）分析
+  - 未分析汇率波动对利润的实际影响和应对措施
