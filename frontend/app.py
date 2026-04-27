@@ -217,8 +217,9 @@ with tab1:
         with st.expander(f"🔤 {label} — {len(cat_issues)}个问题"):
             for issue in cat_issues:
                 severity_icon = {"error": "🔴", "warning": "🟡", "info": "🔵"}.get(issue.severity, "⚪")
+                page_label = "文档级" if issue.page_number == 0 else f"第{issue.page_number}页"
                 st.markdown(
-                    f"{severity_icon} **第{issue.page_number}页**: {issue.message}\n\n"
+                    f"{severity_icon} **{page_label}**: {issue.message}\n\n"
                     f"> 文字片段: _{issue.text_snippet}_"
                 )
                 if issue.detail:

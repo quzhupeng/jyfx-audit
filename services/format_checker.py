@@ -4,14 +4,15 @@
 - 标题应为蓝色 (R:0;G:154;B:201 = #009AC9)
 - 不允许深色背景+深色字体
 - 字号范围 [7pt, 60pt]，超出为异常
+- 智能字体检测：字体名可读时检查是否符合微软雅黑要求，不可读时跳过
 
-不检查的内容（原因：PDF嵌入字体名称不可靠）：
-- 字体名称白名单（PDF中字体显示为 CIDFont+Fx，无法匹配原名）
+不检查的内容：
 - 颜色白名单（PPT中图表/装饰颜色种类多，白名单导致海量误报）
 """
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -35,6 +36,128 @@ TITLE_BLUE_TOLERANCE = 40  # 每通道容差
 
 # 深色阈值（RGB各通道均低于此值视为深色）
 DARK_THRESHOLD = 80
+
+# 嵌入字体子集名称模式（如 CIDFont+F1, ABCDEF+Ghij 等）
+# PDF嵌入子集字体的特征：名称中包含 "+" 号（前缀+原始字体名）
+_EMBEDDED_FONT_PATTERN = re.compile(r"^[A-Za-z]{2,}\+[A-Za-z]")
+
+# 标准字体：微软雅黑及其变体（模板唯一要求字体）
+_STANDARD_FONT_PATTERNS = [
+    re.compile(p, re.IGNORECASE)
+    for p in [
+        r"^MicrosoftYaHei",
+        r"^Microsoft\s*YaHei",
+        r"^微软雅黑",
+    ]
+]
+
+
+def _is_readable_font(font_name: str) -> bool:
+    """判断字体名是否可读（非嵌入子集名称）.
+
+    嵌入子集名如 CIDFont+F1, ABCDEF+Ghij 等无法还原原始字体名。
+    可读名如 MicrosoftYaHei, SimSun, Arial 等。
+    """
+    if not font_name:
+        return False
+    # 匹配 "XX+Y" 模式的嵌入子集名
+    if _EMBEDDED_FONT_PATTERN.match(font_name):
+        return False
+    return True
+
+
+def _is_standard_font(font_name: str) -> bool:
+    """判断字体是否为模板要求的微软雅黑."""
+    return any(p.match(font_name) for p in _STANDARD_FONT_PATTERNS)
+
+
+def check_document_fonts(doc: ParsedDocument, allowed_fonts: Tuple[str, ...]) -> List[FormatIssue]:
+    """文档级字体检查 — 仅当字体名可读时执行.
+
+    算法：
+    1. 采样文档中所有span的字体名
+    2. 判断字体名是否可读（非CIDFont+Fx模式）
+    3. 如果可读：统计字体使用情况，报告非标准字体
+    4. 如果不可读：跳过检查，返回空列表
+
+    Args:
+        doc: 解析后的文档
+        allowed_fonts: 模板定义的允许字体列表
+
+    Returns:
+        格式问题列表
+    """
+    # 收集所有字体名及其使用次数（按span计数）
+    font_counter: Counter = Counter()
+    total_spans = 0
+
+    for page in doc.pages:
+        for block in page.blocks:
+            if block.block_type != 0:
+                continue
+            for span in block.spans:
+                if not span.text.strip() or not span.font:
+                    continue
+                font_counter[span.font] += 1
+                total_spans += 1
+
+    if total_spans == 0:
+        return []
+
+    # 判断字体名是否可读
+    readable_fonts = {f for f in font_counter if _is_readable_font(f)}
+    unreadable_fonts = {f for f in font_counter if not _is_readable_font(f)}
+
+    # 如果大部分字体名不可读，说明PDF嵌入方式使得名称不可用
+    readable_span_count = sum(font_counter[f] for f in readable_fonts)
+    if readable_span_count < total_spans * 0.5:
+        # 超过50%的span使用了不可读字体名，跳过字体检查
+        return []
+
+    # 字体名可读，执行检查
+    issues: List[FormatIssue] = []
+
+    # 统计非标准字体使用情况
+    non_standard_fonts: Counter = Counter()
+    for font_name, count in font_counter.items():
+        if _is_readable_font(font_name) and not _is_standard_font(font_name):
+            non_standard_fonts[font_name] = count
+
+    if not non_standard_fonts:
+        return issues
+
+    # 非标准字体span占比
+    non_standard_total = sum(non_standard_fonts.values())
+    non_standard_ratio = non_standard_total / max(total_spans, 1)
+
+    # 只在非标准字体占比超过10%时报告
+    if non_standard_ratio >= 0.10:
+        font_details = [
+            f"{name}: {count}处"
+            for name, count in non_standard_fonts.most_common(5)
+        ]
+        issues.append(
+            FormatIssue(
+                page_number=0,  # 文档级问题
+                category="font",
+                severity="info",
+                message=(
+                    f"文档中{non_standard_ratio:.0%}的文字未使用微软雅黑"
+                    f"，涉及: {', '.join(font_details)}"
+                ),
+                detail={
+                    "non_standard_fonts": dict(non_standard_fonts.most_common(10)),
+                    "non_standard_ratio": round(non_standard_ratio, 2),
+                    "standard_fonts": {
+                        f: c for f, c in font_counter.most_common(10)
+                        if _is_readable_font(f) and _is_standard_font(f)
+                    },
+                },
+                text_snippet="; ".join(font_details[:3]),
+            )
+        )
+
+    return issues
 
 
 def _is_dark_color(srgb: int) -> bool:
@@ -245,10 +368,21 @@ class FormatChecker:
             issues = check_page_format(page, format_rule)
             all_issues.extend(issues)
 
+        # ---- 字体检查（文档级，智能检测） ----
+        allowed_fonts = ()
+        for sec in self.template.sections:
+            if sec.format.allowed_fonts:
+                allowed_fonts = sec.format.allowed_fonts
+                break
+
+        font_issues = check_document_fonts(doc, allowed_fonts)
+        all_issues.extend(font_issues)
+
         # 计算评分：格式问题只做参考，不影响核心分数
         # 每个页面最多有3类问题，超过50%的页面有问题才扣分
         page_count = doc.page_count if doc.page_count > 0 else 1
-        pages_with_issues = len(set(i.page_number for i in all_issues))
+        page_issues = [i for i in all_issues if i.page_number > 0]
+        pages_with_issues = len(set(i.page_number for i in page_issues))
         issue_ratio = pages_with_issues / page_count
 
         overall = max(1.0 - issue_ratio * 0.5, 0.5)  # 最低0.5，格式不致命
@@ -256,16 +390,20 @@ class FormatChecker:
         # 统计各维度
         color_issues = len([i for i in all_issues if i.category == "color"])
         size_issues = len([i for i in all_issues if i.category == "size"])
+        font_issue_count = len([i for i in all_issues if i.category == "font"])
         layout_issues = len([i for i in all_issues if i.category in ("layout", "margin")])
 
         color_score = max(1.0 - color_issues / max(page_count, 1), 0.5)
         size_score = max(1.0 - size_issues / max(page_count, 1), 0.5)
         layout_score = max(1.0 - layout_issues / max(page_count, 1), 0.5)
 
+        # 字体评分：无问题满分，有问题0.8
+        font_score = 0.8 if font_issue_count > 0 else 1.0
+
         return FormatReport(
             total_issues=len(all_issues),
             issues=tuple(all_issues),
-            font_score=1.0,  # 不检查字体名，默认满分
+            font_score=round(font_score, 2),
             size_score=round(size_score, 2),
             color_score=round(color_score, 2),
             layout_score=round(layout_score, 2),
