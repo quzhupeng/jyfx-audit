@@ -304,14 +304,41 @@ with tab3:
 # Tab 4: 文档信息
 with tab4:
     st.subheader("文档统计信息")
-    st.json({
-        "文件名": doc.filename,
-        "页数": doc.page_count,
-        "文本片段数": stats["text_spans"],
-        "图片块数": stats["images"],
-        "使用的字体": stats["fonts_used"],
-        "使用的字号": stats["font_sizes"],
-    })
 
-    st.subheader("审核报告 JSON")
-    st.json(report.to_dict())
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("文件名", doc.filename)
+    with col2:
+        st.metric("总页数", doc.page_count)
+    with col3:
+        st.metric("文字片段", f"{stats['text_spans']}个")
+    with col4:
+        st.metric("图片/图表", f"{stats['images']}个")
+
+    # 字号分布
+    st.subheader("字号分布")
+    size_counts = {}
+    for s in stats["font_sizes"]:
+        size_range = f"{int(s)}pt"
+        if s >= 22:
+            size_range += "（标题级）"
+        elif s >= 14:
+            size_range += "（小标题）"
+        elif s >= 10:
+            size_range += "（正文）"
+        else:
+            size_range += "（注释/表格）"
+        size_counts[size_range] = size_counts.get(size_range, 0) + 1
+    for label, count in sorted(size_counts.items()):
+        st.caption(f"  {label}: {count}种字号")
+
+    # 章节页数分布
+    st.subheader("章节页数分布")
+    for ch in section_map.sections:
+        if ch.matched and ch.segment_info:
+            pct = ch.segment_info.page_count / doc.page_count * 100
+            st.progress(min(pct / 100, 1.0), text=f"{ch.section_name}: {ch.segment_info.page_count}页 ({pct:.0f}%)")
+
+    # 详细报告（折叠）
+    with st.expander("查看原始审核数据"):
+        st.json(report.to_dict())
