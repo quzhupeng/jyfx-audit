@@ -88,14 +88,19 @@ with st.sidebar:
 
     # AI 分析开关
     ai_available = bool(settings.DEEPSEEK_API_KEY) or bool(settings.ANTHROPIC_API_KEY)
+
+    # 有可用密钥时默认启用，并在会话里记住用户选择
+    if "ai_enabled" not in st.session_state:
+        st.session_state.ai_enabled = ai_available
+
     ai_enabled = st.checkbox(
-        "启用 DeepSeek AI 分析",
-        value=ai_available,
+        "启用 AI 分析",
         disabled=not ai_available,
-        help="需要配置 DEEPSEEK_API_KEY 环境变量",
+        help="需配置 DEEPSEEK_API_KEY 或 ANTHROPIC_API_KEY",
+        key="ai_enabled",
     )
     if not ai_available:
-        st.caption("💡 设置 DEEPSEEK_API_KEY 环境变量以启用 AI 分析")
+        st.caption("💡 未检测到 API Key，请在 .env 或 .streamlit/secrets.toml 设置 DEEPSEEK_API_KEY")
 
     st.divider()
     st.caption(
