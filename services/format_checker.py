@@ -191,6 +191,14 @@ def check_page_format(
     """
     issues: List[FormatIssue] = []
 
+    # 检测本页是否为目录页（目录页的蓝/灰颜色是设计意图，跳过颜色检查）
+    page_text = ""
+    for block in page.blocks:
+        if block.block_type == 0:
+            for span in block.spans:
+                page_text += span.text
+    is_toc_page = "目录" in page_text
+
     # 收集本页所有文字span的统计
     title_spans: List[Span] = []  # ≥22pt 标题级
     body_spans: List[Span] = []  # <22pt 正文级
@@ -216,7 +224,8 @@ def check_page_format(
 
     # ---- 检查1: 标题蓝色检查 ----
     # 参考模板要求：PPT大标题都为蓝色字体 (R:0;G:154;B:201)
-    if title_spans:
+    # 目录页跳过：目录的蓝/灰颜色是导航设计，不是格式问题
+    if title_spans and not is_toc_page:
         non_blue_titles = []
         for span in title_spans:
             # 黑色文字跳过（有些PPT用黑色标题也是正常的）
@@ -293,35 +302,36 @@ def check_page_format(
 
     # ---- 检查3: 深色文字+深色背景风险 ----
     # 参考模板要求：不允许深色背景+深色字体
-    # 简化检查：深色文字(非黑非蓝)在页面中出现过多时提醒
-    dark_non_standard = []
-    for span in body_spans:
-        if span.color != 0 and _is_dark_color(span.color):
-            # 深色但不是蓝色标题
-            if not is_color_within_tolerance(
-                span.color, REQUIRED_TITLE_BLUE_HEX, TITLE_BLUE_TOLERANCE
-            ):
-                dark_non_standard.append(span)
+    # 目录页跳过：目录的灰/蓝色是导航设计
+    if not is_toc_page:
+        dark_non_standard = []
+        for span in body_spans:
+            if span.color != 0 and _is_dark_color(span.color):
+                # 深色但不是蓝色标题
+                if not is_color_within_tolerance(
+                    span.color, REQUIRED_TITLE_BLUE_HEX, TITLE_BLUE_TOLERANCE
+                ):
+                    dark_non_standard.append(span)
 
-    if len(dark_non_standard) >= 5:
-        issues.append(
-            FormatIssue(
-                page_number=page.page_number,
-                category="color",
-                severity="info",
-                message=(
-                    f"第{page.page_number}页有{len(dark_non_standard)}处深色非标准文字"
-                    f"，请确认不存在「深色背景+深色字体」问题"
-                ),
-                detail={
-                    "count": len(dark_non_standard),
-                    "sample_colors": list(
-                        set(format_srgb(s.color) for s in dark_non_standard[:5])
+        if len(dark_non_standard) >= 5:
+            issues.append(
+                FormatIssue(
+                    page_number=page.page_number,
+                    category="color",
+                    severity="info",
+                    message=(
+                        f"第{page.page_number}页有{len(dark_non_standard)}处深色非标准文字"
+                        f"，请确认不存在「深色背景+深色字体」问题"
                     ),
-                },
-                text_snippet="",
+                    detail={
+                        "count": len(dark_non_standard),
+                        "sample_colors": list(
+                            set(format_srgb(s.color) for s in dark_non_standard[:5])
+                        ),
+                    },
+                    text_snippet="",
+                )
             )
-        )
 
     return issues
 
