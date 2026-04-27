@@ -1,0 +1,89 @@
+department: "文旅事业部"
+description: "文旅事业部负责文化旅游项目的策划、运营和推广，涵盖景区管理、酒店运营、文化活动策划、旅游产品开发等业务。"
+
+focus_areas:
+  - area: "经营业绩"
+    weight: 1.5
+    kpis:
+      - name: "营收达成率"
+        direction: "higher_better"
+      - name: "客流量"
+        direction: "higher_better"
+      - name: "人均消费"
+        direction: "higher_better"
+      - name: "入住率"
+        direction: "higher_better"
+  - area: "运营效率"
+    weight: 1.2
+    kpis:
+      - name: "运营成本率"
+        direction: "lower_better"
+      - name: "坪效"
+        direction: "higher_better"
+      - name: "能耗成本占比"
+        direction: "lower_better"
+  - area: "客户体验"
+    weight: 1.0
+    kpis:
+      - name: "客户满意度评分"
+        direction: "higher_better"
+      - name: "OTA平台评分"
+        direction: "higher_better"
+      - name: "复游率"
+        direction: "higher_better"
+
+terminology:
+  - "文旅"
+  - "景区"
+  - "酒店"
+  - "入住率"
+  - "客流量"
+  - "坪效"
+  - "OTA"
+  - "旅行社"
+  - "活动策划"
+  - "文创"
+  - "二次消费"
+  - "复游率"
+
+content_expectations:
+  - "分项目/分渠道的营收数据与对比分析"
+  - "客流来源分析（线上/线下/旅行社/自营渠道）"
+  - "客单价与二消率的变化趋势"
+  - "入住率与RevPAR分析（酒店类项目）"
+  - "节假日与平日的经营对比"
+  - "客户评价与满意度追踪"
+
+risk_factors:
+  - name: "季节性波动"
+    severity: "medium"
+    threshold: "淡旺季营收差异 > 3倍"
+    description: "文旅行业受季节影响大，需关注淡季运营策略"
+  - name: "OTA渠道依赖"
+    severity: "medium"
+    threshold: "OTA渠道占比 > 60%"
+    description: "过度依赖OTA平台导致佣金成本高、客户数据缺失"
+  - name: "运营成本失控"
+    severity: "medium"
+    threshold: "运营成本率环比上升 > 5%"
+    description: "人力、能源、维护成本增长侵蚀利润"
+  - name: "口碑风险"
+    severity: "high"
+    threshold: "OTA评分下降 > 0.5分"
+    description: "客户评价下降直接影响流量和转化"
+
+analysis_prompt_extension: |
+  ## 文旅事业部背景
+
+  文旅事业部的核心是项目管理与客户体验。审核经营分析资料时，需重点关注：
+
+  1. **项目分层分析**：是否按景区/酒店/活动等不同业务线分开呈现
+  2. **客流质量**：不仅是人数，还要看转化率、复游率、满意度
+  3. **周期对比**：节假日vs平日、淡季vs旺季的差异化分析
+  4. **渠道效益**：各渠道获客成本和ROI
+  5. **体验闭环**：客户评价中反映的问题是否已改善
+
+  常见质量问题：
+  - 只报人数不报质量（客单价、二次消费等深度指标缺失）
+  - 缺少竞品对比
+  - 活动效果只谈热闹不谈投入产出

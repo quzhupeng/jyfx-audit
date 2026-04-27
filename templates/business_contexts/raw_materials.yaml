@@ -1,0 +1,89 @@
+department: "原材料事业部"
+description: "原材料事业部负责原材料采购、加工和供应，涵盖原材料产地管理、供应链优化、成本控制等核心业务。"
+
+focus_areas:
+  - area: "采购与成本"
+    weight: 1.5
+    kpis:
+      - name: "采购成本控制率"
+        direction: "lower_better"
+        description: "实际采购成本与预算的偏差"
+      - name: "原料价格波动对冲率"
+        direction: "higher_better"
+        description: "通过期货/长协等方式锁定价格的原料占比"
+      - name: "供应商集中度"
+        direction: "lower_better"
+        description: "TOP3供应商采购额占比"
+  - area: "供应链效率"
+    weight: 1.2
+    kpis:
+      - name: "库存周转天数"
+        direction: "lower_better"
+      - name: "订单交付及时率"
+        direction: "higher_better"
+      - name: "物流成本率"
+        direction: "lower_better"
+  - area: "质量与合规"
+    weight: 1.0
+    kpis:
+      - name: "原料合格率"
+        direction: "higher_better"
+      - name: "质量投诉次数"
+        direction: "lower_better"
+      - name: "合规审查通过率"
+        direction: "higher_better"
+
+terminology:
+  - "原料"
+  - "采购"
+  - "供应链"
+  - "库存"
+  - "期货"
+  - "长协"
+  - "供应商"
+  - "产地"
+  - "品控"
+  - "加工"
+  - "损耗"
+  - "周转"
+
+content_expectations:
+  - "主要原料价格走势与对成本影响分析"
+  - "供应商绩效评估与优化进展"
+  - "库存周转分析（滞销、积压、短缺）"
+  - "采购策略执行情况（长协/现货/期货比例）"
+  - "质量问题闭环处理情况"
+  - "产地管理与可持续采购进展"
+
+risk_factors:
+  - name: "原料价格剧烈波动"
+    severity: "high"
+    threshold: "核心原料月波动 > 10%"
+    description: "原料价格剧烈波动直接影响成本和利润"
+  - name: "供应商依赖风险"
+    severity: "high"
+    threshold: "单一供应商占比 > 30%"
+    description: "过度依赖单一供应商导致议价能力弱、断供风险高"
+  - name: "库存积压"
+    severity: "medium"
+    threshold: "库存周转天数连续上升"
+    description: "库存周转变慢可能导致资金占用和原料过期"
+  - name: "品质不达标"
+    severity: "medium"
+    threshold: "批次合格率 < 95%"
+    description: "原料质量问题影响下游产品质量"
+
+analysis_prompt_extension: |
+  ## 原材料事业部背景
+
+  原材料事业部的核心是采购管理和供应链优化。审核经营分析资料时，需重点关注：
+
+  1. **成本控制逻辑**：价格波动分析是否结合市场趋势和采购策略
+  2. **供应链韧性**：是否有供应商多元化、库存缓冲等风险对冲措施
+  3. **质量追溯**：质量问题是否有闭环处理机制
+  4. **数据准确性**：库存、采购、质量数据的来源和统计口径是否清晰
+
+  常见质量问题：
+  - 成本分析只给数据不给原因（如价格上涨/下降的具体因素）
+  - 缺少供应商层面分析
+  - 库存问题只提现象不提解决措施

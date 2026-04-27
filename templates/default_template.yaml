@@ -1,0 +1,448 @@
+# 经营分析会汇报标准模板 — 基于参考PDF (经营分析会模板.pdf) 的实际章节结构
+name: "经营分析会汇报标准模板"
+version: "2.0"
+metadata:
+  description: "各事业部经营分析会汇报材料标准模板（基于参考PDF更新）"
+  applies_to: "all"
+  reference_pdf: "templates/reference/经营分析会模板.pdf"
+  ppt_color_requirement: "标题蓝色 R:0;G:154;B:201; 表格标题蓝底白字"
+  font_requirement: "微软雅黑"
+
+sections:
+  # ---- 封面 ----
+  - id: cover
+    name: "封面"
+    order: 0
+    essential: false
+    description: "事业部名称、日期、汇报期间、经营分析会标题"
+    detection:
+      keywords:
+        - "经营分析会"
+        - "经营分析"
+        - "事业部"
+      match_mode: "any"
+      search_scope: "first_page"
+      weight: 0.5
+    format:
+      allowed_fonts: []
+      font_size_range: [18, 48]
+    content_rules:
+      min_pages: 1
+      min_text_length: 5
+      min_text_length_section: 10
+
+  # ---- 经营分析任务完成情况汇报（板块一） ----
+  - id: task_completion_report
+    name: "经营分析任务完成情况汇报"
+    order: 1
+    essential: true
+    description: "板块一：经营（根因）分析任务完成情况统计，包含完成率和有效性概览"
+    detection:
+      keywords:
+        - "任务完成情况汇报"
+        - "完成情况汇报"
+        - "完成情况"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.2
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "完成情况"
+        - "有效"
+      requires_data: true
+      min_text_length: 50
+      min_text_length_section: 100
+
+  # ---- 总体指标完成情况 ----
+  - id: overall_indicators
+    name: "总体指标完成情况"
+    order: 2
+    essential: true
+    description: "BSC平衡记分卡红绿灯总表，展示财务/运营/客户/学习各维度指标达成情况"
+    detection:
+      keywords:
+        - "总体指标完成情况"
+        - "指标完成情况"
+        - "平衡记分卡"
+        - "BSC"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.3
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "目标"
+        - "实际"
+        - "达成率"
+      requires_data: true
+      requires_chart: true
+      min_text_length: 50
+      min_text_length_section: 150
+      depth_indicators:
+        - "差异"
+        - "达成率"
+        - "红灯"
+
+  # ---- BSC红灯OGSM红灯指标展示 ----
+  - id: bsc_ogsm_red
+    name: "BSC红灯OGSM红灯指标展示"
+    order: 3
+    essential: false  # 仅当OGSM变红时需要
+    description: "展示BSC红灯对应的OGSM红灯指标汇总"
+    detection:
+      keywords:
+        - "BSC红灯"
+        - "OGSM红灯"
+        - "红灯指标展示"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.0
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "目标"
+        - "实际"
+        - "差异"
+      requires_data: true
+      min_text_length: 30
+      min_text_length_section: 50
+
+  # ---- BSC红灯数据趋势分析 ----
+  - id: trend_analysis
+    name: "BSC红灯数据趋势分析"
+    order: 4
+    essential: false  # 从第二次经营分析起才需要
+    description: "对BSC红灯指标的月度数值趋势分析，判断过往策略有效性"
+    detection:
+      keywords:
+        - "数据趋势分析"
+        - "趋势分析"
+        - "红灯数据趋势"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.0
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "目标"
+        - "实际"
+      requires_data: true
+      requires_chart: true
+      min_text_length: 30
+      min_text_length_section: 80
+
+  # ---- 根因分析（板块二核心） ----
+  - id: root_cause_analysis
+    name: "根因分析"
+    order: 5
+    essential: true
+    description: "对经营问题的深层原因分析，使用5why方法，每个BSC红灯对应一组根因分析"
+    detection:
+      keywords:
+        - "根因分析"
+        - "原因分析"
+        - "问题分析"
+        - "根本原因"
+        - "问题诊断"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.5
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "策略"
+      requires_data: true
+      min_text_length: 50
+      min_text_length_section: 100
+      depth_indicators:
+        - "深层原因"
+        - "改进路径"
+        - "why"
+        - "根本原因"
+        - "深层次"
+
+  # ---- 策略及行动方案（板块二核心） ----
+  - id: action_plan
+    name: "策略及行动方案"
+    order: 6
+    essential: true
+    description: "针对根因的策略和具体行动计划，包含完成时间、主责部门、支持资源"
+    detection:
+      keywords:
+        - "策略及行动方案"
+        - "行动方案"
+        - "行动计划"
+        - "改善措施"
+        - "改进措施"
+        - "对策"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 1.5
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "行动计划"
+        - "完成时间"
+        - "主责部门"
+      requires_data: true
+      min_text_length: 50
+      min_text_length_section: 100
+      depth_indicators:
+        - "落地"
+        - "跟进"
+        - "跟踪"
+        - "闭环"
+        - "里程碑"
+
+  # ---- 人才管理情况 ----
+  - id: talent_management
+    name: "人才管理情况"
+    order: 7
+    essential: false  # 仅当学习成长指标红灯时需要
+    description: "人才盘点储备信息、岗位职级结构差异、潜质员工占比"
+    detection:
+      keywords:
+        - "人才管理"
+        - "人才盘点"
+        - "人才储备"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.8
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "编制"
+        - "储备"
+      requires_data: true
+      min_text_length: 30
+      min_text_length_section: 50
+
+  # ---- 其他重点工作汇报（板块三） ----
+  - id: other_key_work
+    name: "其他重点工作汇报"
+    order: 8
+    essential: false
+    description: "板块三：除红灯根因分析外的其他重点工作，建议时长不超过4分钟"
+    detection:
+      keywords:
+        - "其他重点工作"
+        - "重点工作汇报"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.6
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      min_text_length: 20
+      min_text_length_section: 50
+
+  # ---- 公司级重点任务 ----
+  - id: company_key_tasks
+    name: "公司级重点任务"
+    order: 9
+    essential: false
+    description: "公司级重点任务完成情况（本月到期+其他未到期）"
+    detection:
+      keywords:
+        - "公司级重点任务"
+        - "重点任务完成情况"
+        - "重点任务"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.6
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "责任人"
+        - "完成时间"
+      requires_data: true
+      min_text_length: 30
+      min_text_length_section: 50
+
+  # ---- 其他部门配合协同事项 ----
+  - id: cross_dept_collaboration
+    name: "其他部门配合协同事项"
+    order: 10
+    essential: false
+    description: "需要其他部门协同配合且线下沟通未达成共识的事项"
+    detection:
+      keywords:
+        - "协同事项"
+        - "配合协同"
+        - "部门协同"
+        - "跨部门"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.4
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      min_text_length: 10
+      min_text_length_section: 20
+
+  # ---- 流程运营优秀案例 ----
+  - id: process_excellence
+    name: "流程运营优秀案例"
+    order: 11
+    essential: false
+    description: "流程运行过程中提炼的优秀案例，含提效措施和实施效果"
+    detection:
+      keywords:
+        - "流程运营"
+        - "优秀案例"
+        - "流程案例"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.4
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "流程"
+        - "效果"
+      min_text_length: 20
+      min_text_length_section: 40
+
+  # ---- 标杆案例汇报分享 ----
+  - id: benchmark_sharing
+    name: "标杆案例汇报分享"
+    order: 12
+    essential: false
+    description: "标杆学习案例分享，包含标杆介绍、亮点展示、落地举措"
+    detection:
+      keywords:
+        - "标杆案例"
+        - "标杆学习"
+        - "标杆分享"
+      match_mode: "any"
+      search_scope: "full"
+      weight: 0.4
+    format:
+      allowed_fonts:
+        - "微软雅黑"
+        - "Microsoft YaHei"
+        - "MicrosoftYaHei"
+      font_size_range: [10, 48]
+      body_size_range: [10, 28]
+      title_size_range: [22, 48]
+      allowed_colors: []
+      color_tolerance: 30
+    content_rules:
+      min_pages: 1
+      required_elements:
+        - "标杆"
+        - "举措"
+      min_text_length: 30
+      min_text_length_section: 80
+      depth_indicators:
+        - "落地"
+        - "实施"
+        - "学习"

@@ -1,0 +1,92 @@
+department: "直销事业部"
+description: "直销事业部负责直接面向消费者的销售业务，通过电话销售、在线咨询等方式进行产品推广与成交。"
+
+focus_areas:
+  - area: "销售业绩"
+    weight: 1.5
+    kpis:
+      - name: "销售目标达成率"
+        direction: "higher_better"
+        description: "实际销售额与目标的比率"
+      - name: "人均销售额"
+        direction: "higher_better"
+        description: "每位坐席的平均销售额"
+      - name: "订单转化率"
+        direction: "higher_better"
+        description: "有效线索到成单的转化率"
+  - area: "团队管理"
+    weight: 1.2
+    kpis:
+      - name: "人员流失率"
+        direction: "lower_better"
+        description: "一定周期内离职坐席占比"
+      - name: "坐席人效"
+        direction: "higher_better"
+        description: "每位坐席的产出效率"
+      - name: "培训覆盖率"
+        direction: "higher_better"
+  - area: "客户运营"
+    weight: 1.0
+    kpis:
+      - name: "客户复购率"
+        direction: "higher_better"
+      - name: "客户满意度"
+        direction: "higher_better"
+      - name: "客单价"
+        direction: "higher_better"
+
+terminology:
+  - "直销"
+  - "坐席"
+  - "话术"
+  - "线索"
+  - "成单"
+  - "转化漏斗"
+  - "呼叫中心"
+  - "在线咨询"
+  - "外呼"
+  - "复购"
+  - "客单价"
+  - "CRM"
+
+content_expectations:
+  - "销售漏斗各阶段转化数据与根因分析"
+  - "团队人效横向对比（坐席间、时间间）"
+  - "客户分层运营数据（新客/老客/高价值客户）"
+  - "话术效果评估与迭代记录"
+  - "坐席培训与考核数据"
+  - "渠道来源效果对比（不同流量来源的ROI）"
+
+risk_factors:
+  - name: "销售过度集中"
+    severity: "high"
+    threshold: "TOP3坐席销售额占比 > 50%"
+    description: "少数坐席贡献大部分业绩，团队抗风险能力弱"
+  - name: "人员流失风险"
+    severity: "high"
+    threshold: "月流失率 > 10%"
+    description: "坐席流失过快导致培训成本上升、团队不稳定"
+  - name: "客户投诉集中"
+    severity: "medium"
+    threshold: "月度投诉量环比增长 > 20%"
+    description: "投诉集中在某类问题说明流程或话术需要优化"
+  - name: "客单价持续下滑"
+    severity: "medium"
+    threshold: "连续3月客单价下降"
+    description: "说明销售深度或产品匹配度不足"
+
+analysis_prompt_extension: |
+  ## 直销事业部背景
+
+  直销事业部的核心业务模式是通过电话销售和在线咨询直接面向消费者进行产品推广和成交。审核经营分析资料时，需要特别关注：
+
+  1. **销售漏斗数据**：线索→有效沟通→意向→成单 各阶段转化率是否清晰呈现
+  2. **人效分析**：坐席间横向对比，识别标杆和尾部差距
+  3. **根因深度**：经营波动是否追溯到具体环节（话术/产品/流量/团队）
+  4. **改善可行性**：措施是否有具体时间节点、责任人、量化目标
+  5. **客户视角**：是否有客户满意度、复购率等长期价值指标
+
+  常见质量问题：
+  - 只有数据堆砌，缺乏漏斗各阶段差异分析
+  - 根因停留在表面（如"市场不好"），未追溯到可操作层面
+  - 改善措施空泛，无具体执行方案
