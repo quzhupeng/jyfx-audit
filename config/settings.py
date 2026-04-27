@@ -5,51 +5,73 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-# 自动加载 .env 文件到环境变量
-_ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
-if _ENV_FILE.exists():
-    with open(_ENV_FILE, "r", encoding="utf-8") as _f:
-        for _line in _f:
-            _line = _line.strip()
-            if _line and not _line.startswith("#") and "=" in _line:
-                _k, _, _v = _line.partition("=")
-                _k, _v = _k.strip(), _v.strip()
-                if _k and _k not in os.environ:
-                    os.environ[_k] = _v
+# 项目根目录
+ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
-def _get_secret(key: str, default: str = "") -> str:
-    """优先从环境变量读取，其次从 Streamlit secrets 读取."""
-    value = os.environ.get(key, "")
-    if value:
-        return value
-    try:
-        import streamlit as st
-        return st.secrets.get(key, default)
-    except Exception:
-        return default
+def _load_env_file():
+    """加载 .env 文件到 os.environ."""
+    env_file = ROOT_DIR / ".env"
+    if env_file.exists():
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, _, v = line.partition("=")
+                    k, v = k.strip(), v.strip()
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+
+
+def _load_streamlit_secrets():
+    """加载 .streamlit/secrets.toml 到 os.environ（非 Streamlit 运行时）."""
+    secrets_file = ROOT_DIR / ".streamlit" / "secrets.toml"
+    if not secrets_file.exists():
+        return
+    with open(secrets_file, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or line.startswith("["):
+                continue
+            if "=" in line:
+                k, _, v = line.partition("=")
+                k, v = k.strip(), v.strip()
+                # 去掉引号
+                v = v.strip('"').strip("'")
+                if k and k not in os.environ:
+                    os.environ[k] = v
+
+
+# 加载配置：先 .env，再 secrets.toml
+_load_env_file()
+_load_streamlit_secrets()
+
+
+def _get_config(key: str, default: str = "") -> str:
+    """从 os.environ 读取（.env 和 secrets.toml 已加载到 environ）."""
+    return os.environ.get(key, default)
 
 
 # 上传文件配置
-UPLOAD_DIR = Path(__file__).resolve().parent.parent / "uploads"
+UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_MAX_SIZE_MB = int(os.environ.get("UPLOAD_MAX_SIZE_MB", "50"))
 
 # API 配置 — Anthropic（可选）
-ANTHROPIC_API_KEY = _get_secret("ANTHROPIC_API_KEY")
-ANTHROPIC_MODEL = _get_secret("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+ANTHROPIC_API_KEY = _get_config("ANTHROPIC_API_KEY")
+ANTHROPIC_MODEL = _get_config("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 
 # API 配置 — DeepSeek（默认 AI 提供商）
-DEEPSEEK_API_KEY = _get_secret("DEEPSEEK_API_KEY")
-DEEPSEEK_BASE_URL = _get_secret("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-DEEPSEEK_MODEL = _get_secret("DEEPSEEK_MODEL", "deepseek-chat")
+DEEPSEEK_API_KEY = _get_config("DEEPSEEK_API_KEY")
+DEEPSEEK_BASE_URL = _get_config("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+DEEPSEEK_MODEL = _get_config("DEEPSEEK_MODEL", "deepseek-chat")
 
 # AI 提供商选择: deepseek | anthropic
-AI_PROVIDER = _get_secret("AI_PROVIDER", "deepseek")
+AI_PROVIDER = _get_config("AI_PROVIDER", "deepseek")
 
 # 模板配置
 DEFAULT_TEMPLATE = os.environ.get(
     "TEMPLATE_PATH",
-    str(Path(__file__).resolve().parent.parent / "templates" / "default_template.yaml"),
+    str(ROOT_DIR / "templates" / "default_template.yaml"),
 )
 
 # AI 分析配置
