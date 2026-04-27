@@ -63,7 +63,7 @@ ANTHROPIC_MODEL = _get_config("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 # API 配置 — DeepSeek（默认 AI 提供商）
 DEEPSEEK_API_KEY = _get_config("DEEPSEEK_API_KEY")
 DEEPSEEK_BASE_URL = _get_config("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-DEEPSEEK_MODEL = _get_config("DEEPSEEK_MODEL", "deepseek-chat")
+DEEPSEEK_MODEL = _get_config("DEEPSEEK_MODEL", "deepseek-v4-flash")
 
 # AI 提供商选择: deepseek | anthropic
 AI_PROVIDER = _get_config("AI_PROVIDER", "deepseek")
