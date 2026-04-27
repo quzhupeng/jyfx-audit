@@ -1,62 +1,81 @@
 department: "领参"
-description: "负责人参产品的采购、加工、品牌运营与销售的业务部门"
-business_thread: "参源采购→加工炮制→品质检测→品牌包装→渠道铺货→终端销售"
+description: "负责人参产品全渠道销售运营、产品经营和品牌增长的业务部门"
+business_thread: "产品销售与渠道拓客 → 用户运营与复购裂变 → 费用与利润管控 → 品牌与市场经营 → 目标达成管理"
 
 focus_areas:
-  - area: "采购与供应链"
+  - area: "全渠道销售运营"
     weight: 1.5
     kpis:
-      - name: "原料采购成本"
-        direction: "lower_better"
-        description: "人参原料的平均采购单价"
-      - name: "供应商合格率"
+      - name: "整体营收达成率"
         direction: "higher_better"
-        description: "符合品质标准的供应商占比"
-      - name: "采购及时率"
+        description: "各渠道总营收与目标的比率"
+      - name: "各渠道营收占比"
+        direction: "stable"
+        description: "门店/私域/分销/企购/会员等渠道结构"
+      - name: "各渠道拓新数量"
         direction: "higher_better"
-        description: "按计划完成采购的比率"
-  - area: "产品与品牌"
+        description: "各渠道新客户获取数量"
+      - name: "有效活跃渠道数"
+        direction: "higher_better"
+        description: "有持续产出的活跃渠道数量"
+  - area: "产品经营"
     weight: 1.3
     kpis:
-      - name: "产品合格率"
+      - name: "库存周转天数"
+        direction: "lower_better"
+        description: "高滋品库存周转效率"
+      - name: "临期产品占比"
+        direction: "lower_better"
+        description: "临近保质期产品的占比"
+      - name: "SKU结构优化"
         direction: "higher_better"
-        description: "通过品质检测的产品批次占比"
-      - name: "品牌知名度"
+        description: "SKU结构健康度"
+  - area: "客户全生命周期"
+    weight: 1.2
+    kpis:
+      - name: "复购率"
         direction: "higher_better"
-        description: "市场调研中的品牌认知度"
-  - area: "销售与渠道"
+        description: "客户再次购买比率"
+      - name: "老客贡献占比"
+        direction: "higher_better"
+        description: "老客户贡献的营收占比"
+      - name: "活动转化率"
+        direction: "higher_better"
+        description: "营销活动的成交转化率"
+  - area: "利润与费用"
     weight: 1.4
     kpis:
-      - name: "销售目标达成率"
+      - name: "利润率"
         direction: "higher_better"
-        description: "实际销售额与目标的比率"
-      - name: "渠道覆盖率"
-        direction: "higher_better"
-        description: "已覆盖销售渠道占目标渠道的比率"
-      - name: "客户复购率"
-        direction: "higher_better"
-        description: "老客户再次购买的比率"
+        description: "整体毛利率/净利率"
+      - name: "销售费用率"
+        direction: "lower_better"
+        description: "销售费用占营收的比例"
+      - name: "客户投诉率"
+        direction: "lower_better"
+        description: "客户投诉占总订单的比率"
 
 risk_factors:
-  - name: "原料价格波动"
+  - name: "营收未达标"
     severity: "high"
-    threshold: "采购成本环比波动 > 20%"
-  - name: "品质问题"
+    threshold: "整体营收达成率 < 90%"
+  - name: "渠道结构失衡"
     severity: "high"
-    threshold: "产品不合格率 > 5%"
-  - name: "渠道拓展停滞"
+    threshold: "单一渠道营收占比 > 60%"
+  - name: "库存积压"
     severity: "medium"
-    threshold: "连续2月无新增渠道"
+    threshold: "临期产品占比持续上升"
 
 analysis_prompt_extension: |
-  领参部门的核心业务是人参产品从采购到销售的全链路管理。审核经营分析资料时需要特别关注：
-  1. **供应链管理**：采购成本变化、供应商管理、原料品质管控
-  2. **加工品质**：产品合格率、加工效率、品质检测标准执行
-  3. **品牌运营**：品牌推广投入与效果、市场认知度变化
-  4. **渠道销售**：各渠道销售占比、新渠道拓展、终端动销数据
-  5. **成本结构**：采购→加工→销售的各环节成本分析和优化空间
+  领参的核心是以产品销售、渠道拓客、用户运营、营收利润、品牌增长为核心主线。审核经营分析资料时需特别关注：
+  1. **全渠道运营**：线下门店、私域社群、渠道分销、企购团购、会员复购等各场景的数据和表现
+  2. **产品经营**：高滋品进销存管理、品控、SKU优化、爆款打造与动销
+  3. **客户生命周期**：新客获取→转化→会员维护→复购→裂变各环节
+  4. **费用与利润**：营销投放、渠道佣金、人力成本、仓储物流成本管控
+  5. **品牌与市场**：区域渗透、竞品对标、营销活动策划
+  6. **目标达成**：月/季/年度营收、毛利、回款、库存健康度
 
   常见质量问题：
-  - 缺乏采购成本变化的根因分析（产地、季节、供需）
-  - 品质问题只报数量未分析原因和改善措施
-  - 渠道数据只有总量，缺乏各渠道的深度分析
+  - 各渠道只有营收总量，缺乏拓新数量和活跃度分析
+  - 产品经营缺乏SKU维度和动销分析
+  - 费用管控只有总额，缺乏费效比分析

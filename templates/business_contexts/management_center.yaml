@@ -1,59 +1,56 @@
 department: "管理中心"
-description: "负责人力资源、行政后勤、IT支撑等综合管理服务的职能部门"
-business_thread: "制度规划→组织建设→人才管理→效能提升→成本管控→服务保障"
+description: "负责战略拆解、组织人才、流程机制和数字化管理的综合职能部门"
+business_thread: "战略拆解 → 组织/人才承接 → 流程/机制落地 → 数字化固化 → 成本效率验证 → 经营分析改善 → 回到战略调整"
 
 focus_areas:
-  - area: "人力管理"
-    weight: 1.4
+  - area: "战略落地"
+    weight: 1.5
     kpis:
-      - name: "人员编制执行率"
-        direction: "stable"
-        description: "实际在岗人数与编制的比率"
+      - name: "战略拆解完成度"
+        direction: "higher_better"
+        description: "集团战略到各部门目标的分解覆盖率"
+      - name: "流程/机制落地"
+        direction: "higher_better"
+        description: "新建或优化的管理制度/流程数量"
+      - name: "数字化固化率"
+        direction: "higher_better"
+        description: "核心流程数字化覆盖程度"
+  - area: "组织与人才"
+    weight: 1.3
+    kpis:
+      - name: "人才承接度"
+        direction: "higher_better"
+        description: "关键岗位人才到位率和胜任力"
       - name: "招聘达成率"
         direction: "higher_better"
-        description: "各岗位招聘需求按时完成的比率"
-      - name: "核心人才留存率"
-        direction: "higher_better"
-        description: "核心岗位人员的留存比率"
-  - area: "行政运营"
-    weight: 1.2
+        description: "各岗位招聘需求的按时完成率"
+  - area: "赋能与增效"
+    weight: 1.4
     kpis:
-      - name: "行政费用预算执行率"
-        direction: "stable"
-        description: "行政类费用的预算vs实际执行情况"
-      - name: "员工满意度"
+      - name: "降本增效贡献"
         direction: "higher_better"
-        description: "员工对行政服务的满意度评分"
-  - area: "IT支撑"
-    weight: 1.1
-    kpis:
-      - name: "系统可用率"
+        description: "各项工作对降本增效的贡献量化"
+      - name: "业务前台协同度"
         direction: "higher_better"
-        description: "核心IT系统的正常运行时间占比"
-      - name: "需求响应时长"
-        direction: "lower_better"
-        description: "处理各业务线IT需求的平均时长"
+        description: "与业务前线的高效协同合力"
 
 risk_factors:
-  - name: "核心人才流失"
+  - name: "被动等待"
     severity: "high"
-    threshold: "核心岗位月流失率 > 5%"
-  - name: "编制严重偏离"
+    threshold: "职能部门未主动管理与建立规则"
+  - name: "缺乏体系化"
     severity: "medium"
-    threshold: "编制执行偏差 > 20%"
-  - name: "行政费用超标"
-    severity: "medium"
-    threshold: "行政费用超预算 > 15%"
+    threshold: "解决问题靠临时措施，未建长效机制"
 
 analysis_prompt_extension: |
-  管理中心的核心职能是为集团提供人力资源、行政和IT等综合管理支撑。审核经营分析资料时需要特别关注：
-  1. **人力规划与执行**：编制管理、招聘进度、人才梯队建设
-  2. **组织效能**：人均产出、组织效率指标、部门间协同效率
-  3. **费用管控**：行政费用、人力成本的预算执行和优化措施
-  4. **服务品质**：内部客户（各事业部）的服务满意度
-  5. **制度完善**：管理制度的更新和执行情况
+  管理中心的核心是战略拆解到执行闭环的全链路管理。审核经营分析资料时需特别关注：
+  1. **主动管理**：职能部门是否主动管理与建立规则，避免被动等待
+  2. **体系化方法**：是否用体系化方法解决问题，注重长效机制建设
+  3. **深度赋能**：作为后台是否为业务前台深度赋能，与业务前线形成高效协同合力
+  4. **降本增效**：各项工作是否贡献于降本、增效等核心经营指标
+  5. **闭环管理**：从战略拆解到经营分析改善再到战略调整，闭环是否完整
 
   常见质量问题：
-  - 人力数据只有总量，缺乏结构分析（岗位/层级/事业部分布）
-  - 招聘只报数据未分析难点和改善方案
-  - 缺乏对其他事业部支撑效果的评价
+  - 工作汇报流于事务罗列，缺乏与战略目标的关联
+  - 未体现对业务前线的赋能效果
+  - 缺乏量化数据支撑降本增效成果

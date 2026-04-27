@@ -1,62 +1,53 @@
 department: "干细胞研究院"
-description: "负责干细胞技术的基础研究、临床转化和产学研合作的专业研究机构"
-business_thread: "课题立项→基础研究→技术攻关→临床实验→成果转化→产学研合作"
+description: "遵循全生命周期管理流程，负责种子/细胞株管理、生产与质量控制的专业研究机构"
+business_thread: "种子/细胞株管理 → 生产计划与排程 → 生产过程与质量控制 → 分析检测与合规放行"
 
 focus_areas:
-  - area: "研究进展"
+  - area: "生产质量"
     weight: 1.5
     kpis:
-      - name: "课题推进率"
+      - name: "关键工艺成功率（一/二级罐培养）"
         direction: "higher_better"
-        description: "按计划节点推进的研究课题占比"
-      - name: "里程碑达成率"
+        description: "核心培养工艺的一次成功率"
+      - name: "检测一次合格率"
         direction: "higher_better"
-        description: "各研究项目关键里程碑的达成情况"
-      - name: "实验完成量"
+        description: "分析检测一次合格的比率"
+      - name: "生产计划达成率"
         direction: "higher_better"
-        description: "完成的实验批次和测试项目数量"
-  - area: "成果产出"
-    weight: 1.4
+        description: "按计划完成生产任务的比率"
+  - area: "研发里程碑"
+    weight: 1.3
     kpis:
-      - name: "论文发表数"
+      - name: "研发项目里程碑达成率"
         direction: "higher_better"
-        description: "在学术期刊发表的论文数量和质量"
-      - name: "专利申请数"
-        direction: "higher_better"
-        description: "新申请的技术专利数量"
-      - name: "成果转化项目数"
-        direction: "higher_better"
-        description: "进入临床转化或产业化阶段的项目数"
-  - area: "合作与资源"
-    weight: 1.1
+        description: "各研发项目关键里程碑的达成情况"
+  - area: "流程控制"
+    weight: 1.2
     kpis:
-      - name: "产学研合作项目数"
+      - name: "种子质量管控"
         direction: "higher_better"
-        description: "与高校/医院/企业的合作项目数量"
-      - name: "外部资金引入"
-        direction: "higher_better"
-        description: "获得的科研拨款、合作资金等外部资金"
+        description: "种子/细胞株的质量合格率"
+      - name: "生产异常率"
+        direction: "lower_better"
+        description: "生产过程中的异常事件频率"
 
 risk_factors:
-  - name: "关键课题延期"
+  - name: "关键工艺失败率上升"
     severity: "high"
-    threshold: "核心研究课题延期 > 2个月"
-  - name: "成果转化停滞"
+    threshold: "一/二级罐培养成功率下降"
+  - name: "合规风险"
     severity: "high"
-    threshold: "连续6个月无新的转化项目"
-  - name: "科研人才流失"
-    severity: "medium"
-    threshold: "核心研究人员离职"
+    threshold: "检测结果不合格或放行异常"
 
 analysis_prompt_extension: |
-  干细胞研究院的核心职能是干细胞技术的基础研究和临床转化。审核经营分析资料时需要特别关注：
-  1. **研究进展**：各课题的推进状态、关键里程碑达成、延期原因
-  2. **实验管理**：实验计划与执行、数据质量和可重复性
-  3. **成果产出**：论文、专利、技术标准等硬性成果指标
-  4. **临床转化**：从基础研究到临床应用的推进情况和瓶颈
-  5. **产学研生态**：合作网络建设、外部资源获取、行业影响力
+  干细胞研究院遵循"种子/细胞株管理→生产计划与排程→生产过程与质量控制→分析检测与合规放行"的全生命周期管理流程。审核经营分析资料时需特别关注：
+  1. **关键工艺成功率**：一/二级罐培养等核心工艺的稳定性
+  2. **生产计划达成**：排程执行和交付情况
+  3. **检测与合规**：分析检测合格率、放行合规性
+  4. **研发里程碑**：各项目的关键节点达成
+  5. **BSC挂钩**：指标是否与流程关键控制点紧密挂钩，衡量稳定性、效率与质量
 
   常见质量问题：
-  - 研究进展描述过于笼统，缺乏具体里程碑和量化指标
-  - 实验数据只有数量，缺乏质量评估和统计分析
-  - 成果转化缺乏路径规划和时间节点
+  - 生产数据只有总量，缺乏关键工艺的成功率分析
+  - 异常事件只报数量，缺乏根因和改善措施
+  - 研发里程碑缺乏详细的节点状态

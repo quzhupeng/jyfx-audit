@@ -1,62 +1,49 @@
 department: "数字营销"
-description: "通过线上渠道和数字化手段进行品牌推广、线索获取与客户转化的业务部门"
-business_thread: "渠道投放→内容运营→线索获取→数据分析→策略优化→ROI提升"
+description: "通过新媒体、直播、达人运营、内容IP等手段为各事业部赋能的业务部门"
+business_thread: "公域引流（新媒体/直播/达人）→ 私域沉淀 → 销售转化 → 流量变现与业务赋能"
 
 focus_areas:
-  - area: "投放效果"
+  - area: "流量变现"
     weight: 1.5
     kpis:
-      - name: "ROI（投入产出比）"
+      - name: "收入"
         direction: "higher_better"
-        description: "广告投放带来的收入与投入的比率"
-      - name: "获客成本（CPA）"
-        direction: "lower_better"
-        description: "获取单个有效线索/客户的平均成本"
-      - name: "点击率（CTR）"
+        description: "数字营销渠道产生的收入"
+      - name: "净利润额"
         direction: "higher_better"
-        description: "广告点击量与曝光量的比率"
-  - area: "内容与运营"
+        description: "扣除费用后的净利润"
+  - area: "业务赋能"
+    weight: 1.4
+    kpis:
+      - name: "核销业绩"
+        direction: "higher_better"
+        description: "线上引流到线下核销的业绩"
+      - name: "核销人次"
+        direction: "higher_better"
+        description: "线上引流到线下核销的人次"
+  - area: "用户沉淀"
     weight: 1.2
     kpis:
-      - name: "粉丝增长率"
+      - name: "商城活跃用户"
         direction: "higher_better"
-        description: "各平台粉丝/关注者的增长速率"
-      - name: "内容互动率"
-        direction: "higher_better"
-        description: "点赞、评论、分享等互动指标"
-      - name: "私域引流率"
-        direction: "higher_better"
-        description: "从公域平台引流到私域池的转化率"
-  - area: "线索质量"
-    weight: 1.3
-    kpis:
-      - name: "有效线索数"
-        direction: "higher_better"
-        description: "符合质量标准的营销线索数量"
-      - name: "线索到成交转化率"
-        direction: "higher_better"
-        description: "线索最终转化为实际销售的比率"
+        description: "线上商城的活跃用户数"
 
 risk_factors:
-  - name: "投放ROI持续下滑"
+  - name: "投入产出失衡"
     severity: "high"
-    threshold: "连续2月ROI下降 > 20%"
-  - name: "渠道依赖过度集中"
+    threshold: "净利润持续为负或下降"
+  - name: "赋能效果弱"
     severity: "medium"
-    threshold: "单一渠道贡献 > 70%线索"
-  - name: "获客成本飙升"
-    severity: "high"
-    threshold: "CPA环比增长 > 30%"
+    threshold: "核销业绩占比持续走低"
 
 analysis_prompt_extension: |
-  数字营销部门的核心业务是通过线上渠道和数字化手段获取线索并驱动转化。审核经营分析资料时需要特别关注：
-  1. **投放效率分析**：各渠道ROI对比、成本趋势、预算分配合理性
-  2. **内容运营数据**：内容产出频率、互动率、粉丝增长趋势
-  3. **线索全链路追踪**：从曝光→点击→留资→跟进→成交的完整漏斗
-  4. **渠道策略**：多渠道布局是否合理，是否存在过度依赖单一渠道
-  5. **数据驱动决策**：是否有A/B测试结果、用户画像分析等深度数据
+  数字营销的核心价值是通过新媒体、直播、达人运营、内容IP等手段为各事业部赋能。审核经营分析资料时需特别关注：
+  1. **流量变现效率**：各渠道投入与产出的ROI分析
+  2. **业务赋能效果**：为直销、美业等事业部带来的核销业绩和引流效果
+  3. **用户沉淀**：公域引流到私域的转化、商城活跃度
+  4. **BSC覆盖**：流量变现、业务赋能效果、用户沉淀是否全面覆盖
 
   常见质量问题：
-  - 只有投放总量数据，缺乏各渠道ROI对比分析
-  - 线索数量与质量未区分，缺乏线索转化链路分析
-  - 策略调整缺乏数据支撑，凭感觉优化
+  - 只有投放数据，缺乏对各事业部的实际赋能效果分析
+  - 收入与费用未做匹配分析，看不出盈利能力
+  - 缺乏用户从公域到私域到成交的链路数据

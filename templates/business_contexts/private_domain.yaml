@@ -1,65 +1,62 @@
 department: "私域事业部"
-description: "通过微信、社群、小程序等私域渠道进行客户运营与销售转化的业务部门"
-business_thread: "引流建池→客户分层→内容触达→社群运营→精准转化→复购裂变"
+description: "聚焦To B精细化运营，以私域直播为主力，构建多渠道协同的B端盈利模式"
+business_thread: "To B精细化运营 → 私域直播（主力获取现金流）→ 补齐团购与商超 → 拉升品牌价格带 → 多渠道协同、摆脱白牌"
 
 focus_areas:
-  - area: "私域规模"
-    weight: 1.4
-    kpis:
-      - name: "私域用户总量"
-        direction: "higher_better"
-        description: "企微/个人号/社群中的总用户数"
-      - name: "日新增用户数"
-        direction: "higher_better"
-        description: "每日新增的私域用户数"
-      - name: "用户活跃率"
-        direction: "higher_better"
-        description: "有互动行为的活跃用户占比"
-  - area: "转化与销售"
+  - area: "三驾马车"
     weight: 1.5
     kpis:
-      - name: "私域GMV"
+      - name: "私域直播业绩"
         direction: "higher_better"
-        description: "私域渠道产生的总交易额"
-      - name: "转化率"
+        description: "私域直播产生的现金流和业绩"
+      - name: "团购渠道进展"
         direction: "higher_better"
-        description: "私域用户到下单的转化率"
-      - name: "客单价"
+        description: "私域团购渠道的拓展和业绩"
+      - name: "商超渠道进展"
         direction: "higher_better"
-        description: "私域渠道的平均订单金额"
-  - area: "客户运营"
-    weight: 1.2
+        description: "商超渠道的拓展和业绩"
+  - area: "渠道结构"
+    weight: 1.3
     kpis:
-      - name: "复购率"
+      - name: "渠道结构均衡度"
+        direction: "stable"
+        description: "三条业务线的营收占比和推进节奏"
+      - name: "库存健康度"
         direction: "higher_better"
-        description: "私域用户的重复购买率"
-      - name: "裂变系数"
-        direction: "higher_better"
-        description: "每个用户平均带来的新用户数"
-      - name: "用户流失率"
+        description: "库存周转和积压情况"
+      - name: "物流成本"
         direction: "lower_better"
-        description: "取关/删除/退群的私域用户比率"
+        description: "物流配送成本"
+  - area: "费用与利润"
+    weight: 1.4
+    kpis:
+      - name: "投产比"
+        direction: "higher_better"
+        description: "费用投入的有效性和产出比"
+      - name: "收入与成本匹配"
+        direction: "stable"
+        description: "收入增长与成本增长的匹配度"
 
 risk_factors:
-  - name: "用户增长停滞"
+  - name: "三驾马车失衡"
     severity: "high"
-    threshold: "连续2月日新增用户数下降"
-  - name: "转化率下滑"
+    threshold: "私域直播占比过高，团购/商超未推进"
+  - name: "费用投入低效"
     severity: "high"
-    threshold: "私域转化率环比下降 > 15%"
-  - name: "用户流失加速"
+    threshold: "投产比持续下降"
+  - name: "品牌建设停滞"
     severity: "medium"
-    threshold: "月流失率 > 8%"
+    threshold: "仍停留在白牌状态"
 
 analysis_prompt_extension: |
-  私域事业部的核心业务是通过私域渠道实现客户精细化运营和销售转化。审核经营分析资料时需要特别关注：
-  1. **用户增长与留存**：新增来源分析、用户活跃度变化、流失原因
-  2. **分层运营效果**：不同用户层级（新客/活跃/沉睡/VIP）的运营策略和转化差异
-  3. **内容与活动**：触达频率、内容形式效果对比、活动ROI
-  4. **销售转化路径**：从触达到成交的完整链路分析
-  5. **裂变与口碑**：老带新效果、用户推荐率
+  私域事业部聚焦To B精细化运营，以私域直播为当前主力。审核经营分析资料时需特别关注：
+  1. **三驾马车节奏**：私域直播、团购、商超三条线推进是否正常？是否有短板？短板是否有明确补齐措施？
+  2. **费用投入有效性**：带来更多收入的费用是否有必要？投产比如何？
+  3. **收入与成本**：收入与成本是否合理匹配？渠道结构拓展是否顺利？
+  4. **库存与物流**：库存是否健康？物流成本是否在降低？
+  5. **品牌升级**：是否在拉升品牌价格带和技术高度，摆脱白牌印象？
 
   常见质量问题：
-  - 只有用户总量数据，缺乏新增-活跃-留存-转化的完整链路
-  - 缺乏用户分层分析和差异化运营策略
-  - 活动效果只有GMV，缺乏ROI和用户质量分析
+  - 三条业务线只报数据，未分析节奏和短板
+  - 费用分析只有总额，缺乏投产比
+  - 缺乏品牌建设和多渠道协同的战略性分析

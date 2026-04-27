@@ -5,6 +5,18 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+# 自动加载 .env 文件到环境变量
+_ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
+if _ENV_FILE.exists():
+    with open(_ENV_FILE, "r", encoding="utf-8") as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _, _v = _line.partition("=")
+                _k, _v = _k.strip(), _v.strip()
+                if _k and _k not in os.environ:
+                    os.environ[_k] = _v
+
 
 def _get_secret(key: str, default: str = "") -> str:
     """优先从环境变量读取，其次从 Streamlit secrets 读取."""

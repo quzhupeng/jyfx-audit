@@ -1,59 +1,53 @@
 department: "研发中心"
-description: "负责新产品研发、技术创新和产品迭代升级的技术部门"
-business_thread: "需求洞察→立项评估→研发攻关→测试验证→产品发布→迭代优化"
+description: "遵循IPD全流程，负责技术预研、产品开发与成果转化的技术部门"
+business_thread: "技术预研 → 项目立项 → 开发验证 → 成果转化/上市（IPD全流程）"
 
 focus_areas:
-  - area: "研发产出"
+  - area: "研发投产"
     weight: 1.5
     kpis:
-      - name: "新品上市数量"
+      - name: "研发投产比"
         direction: "higher_better"
-        description: "按计划完成研发并上市的新产品数量"
-      - name: "研发项目完成率"
+        description: "研发投入的投资回报率"
+      - name: "研发费用预算达成率"
+        direction: "stable"
+        description: "研发费用实际vs预算"
+  - area: "产品上市"
+    weight: 1.4
+    kpis:
+      - name: "新产品上市及时率"
         direction: "higher_better"
-        description: "按计划节点完成研发项目的比率"
-      - name: "研发周期"
-        direction: "lower_better"
-        description: "从立项到产品上市的平均周期"
-  - area: "研发质量"
+        description: "按计划节点完成产品上市的比率"
+      - name: "上市节点达成"
+        direction: "higher_better"
+        description: "IPD流程关键产出节点的达成情况"
+  - area: "技术成果"
     weight: 1.3
     kpis:
-      - name: "一次通过率"
+      - name: "核心技术成果（专利/查新）数量"
         direction: "higher_better"
-        description: "产品测试一次通过的比率"
-      - name: "上市后问题率"
-        direction: "lower_better"
-        description: "新品上市后发现的品质问题数"
-  - area: "创新与专利"
-    weight: 1.2
-    kpis:
-      - name: "专利申请/授权数"
+        description: "专利申请/授权和查新报告数量"
+      - name: "技术储备"
         direction: "higher_better"
-        description: "新申请和获得的专利数量"
-      - name: "技术成果转化率"
-        direction: "higher_better"
-        description: "研发成果成功转化为产品的比率"
+        description: "前瞻性技术研究和储备项目"
 
 risk_factors:
-  - name: "研发进度延迟"
+  - name: "研发投产比持续走低"
+    severity: "high"
+    threshold: "研发投入产出不匹配"
+  - name: "产品上市严重延迟"
     severity: "high"
     threshold: "核心项目延期 > 1个月"
-  - name: "上市产品品质问题"
-    severity: "high"
-    threshold: "新品上市后重大品质问题"
-  - name: "技术人才流失"
-    severity: "medium"
-    threshold: "核心研发人员流失率 > 10%"
 
 analysis_prompt_extension: |
-  研发中心的核心职能是新产品研发和技术创新。审核经营分析资料时需要特别关注：
-  1. **项目进度管理**：各研发项目的里程碑达成、延期原因分析
-  2. **研发质量**：测试结果、品质问题追踪、改进措施
-  3. **市场导向**：研发立项是否有市场调研支撑，新品市场反馈如何
-  4. **资源效率**：研发投入（人力、资金）与产出的匹配度
-  5. **技术储备**：前瞻性技术研究和专利布局
+  研发中心遵循IPD全流程进行技术预研和产品开发。审核经营分析资料时需特别关注：
+  1. **研发投产比**：研发投入是否产生了对等的商业回报
+  2. **新产品上市及时率**：各项目是否按IPD流程节点推进
+  3. **核心技术成果**：专利/查新等硬性产出指标
+  4. **预算管控**：研发费用预算与实际的偏差分析
+  5. **BSC对齐**：指标是否与IPD流程关键产出节点紧密对齐，衡量价值创造与效率
 
   常见质量问题：
-  - 研发进度只有总体概况，缺乏各项目的详细状态
-  - 延期项目只说原因不提改善措施和新的时间节点
-  - 缺乏新品上市后的市场表现追踪
+  - 研发进展只报概况，缺乏各IPD节点的详细状态
+  - 延期项目只说原因不提改善措施
+  - 缺乏研发投产比的量化分析

@@ -1,59 +1,56 @@
 department: "纪审部"
-description: "负责集团纪律检查、内部审计、合规管理的监督职能部门"
-business_thread: "审计计划→现场审计→问题发现→整改跟踪→制度完善→风险防范"
+description: "负责合规风控、监督纠偏与价值增值的集团监督职能部门"
+business_thread: "合规风控 → 监督纠偏 → 整改验收闭环 → 专项支撑 → 价值增值"
 
 focus_areas:
-  - area: "审计执行"
+  - area: "审计计划与执行"
     weight: 1.5
     kpis:
-      - name: "审计计划完成率"
+      - name: "年度/季度审计计划落地"
         direction: "higher_better"
-        description: "按计划完成的审计项目数量占比"
-      - name: "问题发现率"
+        description: "按计划完成的审计项目数量"
+      - name: "问题排查与风险预警"
         direction: "higher_better"
-        description: "审计中发现问题的项目占审计总数的比率"
-      - name: "审计覆盖率"
+        description: "发现的问题数量和预警质量"
+      - name: "整改验收闭环率"
         direction: "higher_better"
-        description: "被审计单位占应审计单位的比率"
-  - area: "整改跟踪"
-    weight: 1.4
+        description: "问题整改完成并验收通过的比率"
+  - area: "专项支撑"
+    weight: 1.3
     kpis:
-      - name: "整改完成率"
+      - name: "业务优化建议数量"
         direction: "higher_better"
-        description: "审计问题完成整改的比率"
-      - name: "整改及时率"
+        description: "审计发现并提出的业务优化建议数"
+      - name: "风控标准落地条数"
         direction: "higher_better"
-        description: "在规定期限内完成整改的比率"
-  - area: "合规与风控"
+        description: "制定并落地的风控标准/制度数"
+  - area: "价值创造"
     weight: 1.2
     kpis:
-      - name: "合规培训覆盖率"
+      - name: "降损止损金额"
         direction: "higher_better"
-        description: "参加合规培训的员工占比"
-      - name: "重复问题发生率"
-        direction: "lower_better"
-        description: "相同/类似问题在不同审计周期重复出现的比率"
+        description: "通过审计挽回/避免的损失金额"
+      - name: "合规风险规避价值"
+        direction: "higher_better"
+        description: "预防性合规工作带来的风险规避价值"
 
 risk_factors:
-  - name: "审计覆盖不足"
+  - name: "审计计划严重滞后"
     severity: "high"
-    threshold: "审计覆盖率 < 60%"
-  - name: "整改执行不力"
+    threshold: "审计计划完成率 < 60%"
+  - name: "整改闭环不力"
     severity: "high"
-    threshold: "整改完成率 < 80%"
-  - name: "重大合规风险"
-    severity: "high"
-    threshold: "发现重大违规事项"
+    threshold: "整改验收闭环率 < 80%"
 
 analysis_prompt_extension: |
-  纪审部的核心职能是通过内部审计和合规管理防范经营风险。审核经营分析资料时需要特别关注：
-  1. **审计计划执行**：年度审计计划的完成情况、覆盖范围
-  2. **问题发现与分类**：审计发现的问题数量、类型分布、严重程度
-  3. **整改进度**：历史问题的整改进展、超期未整改项及原因
-  4. **制度建设**：审计发现驱动的制度完善和流程优化
-  5. **风险预警**：对潜在风险的识别和预警机制
+  纪审部以合规风控、监督纠偏、价值增值为核心主线。审核经营分析资料时需特别关注：
+  1. **审计计划落地**：年度/季度计划执行情况、覆盖范围
+  2. **问题排查与风险预警**：发现问题的数量、类型、严重程度，预警是否及时
+  3. **整改验收闭环**：历史问题整改进度、超期未整改项、闭环率
+  4. **专项支撑**：配合集团合规检查、外部审计对接、重大事项风险研判
+  5. **价值增值**：降损止损金额、风控标准建设、合规风险规避
 
   常见质量问题：
-  - 只有审计数量统计，缺乏问题类型和严重程度的分析
-  - 整改跟踪缺乏闭环（未展示整改后复核结果）
-  - 未将审计发现与制度完善建立关联
+  - 只有审计数量统计，缺乏问题类型和价值分析
+  - 整改跟踪缺乏闭环数据
+  - 未体现对业务优化的增值贡献

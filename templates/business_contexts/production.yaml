@@ -1,65 +1,53 @@
 department: "生产中心"
-description: "负责产品生产制造、品质控制、设备维护和生产效率提升的运营部门"
-business_thread: "生产计划→物料准备→生产执行→品质检验→包装入库→交付发运"
+description: "遵循ISC集成供应链链条，负责生产制造、成本控制与质量交付的运营部门"
+business_thread: "生产计划与排程 → 生产过程与成本控制 → 质量与交付管理 → 库存与供应链协同（ISC链条）"
 
 focus_areas:
-  - area: "生产效率"
+  - area: "成本"
     weight: 1.5
     kpis:
-      - name: "计划达成率"
+      - name: "生产成本控制率（对标外部OEM）"
         direction: "higher_better"
-        description: "按计划完成生产任务的比率"
-      - name: "设备OEE"
-        direction: "higher_better"
-        description: "设备综合效率（可用率×表现率×合格率）"
-      - name: "人均产值"
-        direction: "higher_better"
-        description: "每位生产人员的平均产值"
-  - area: "品质管控"
+        description: "自产成本与外部OEM成本的对比，一号指标"
+  - area: "效率"
     weight: 1.4
     kpis:
-      - name: "一次合格率"
+      - name: "生产计划达成率"
         direction: "higher_better"
-        description: "产品首次检验合格通过的比率"
-      - name: "客诉率"
-        direction: "lower_better"
-        description: "客户投诉批次占总出货批次的比率"
-      - name: "不良率"
-        direction: "lower_better"
-        description: "生产过程中的不良品比率"
-  - area: "成本与安全"
+        description: "按计划完成生产任务的比率"
+  - area: "质量"
+    weight: 1.3
+    kpis:
+      - name: "成品一次交检合格率"
+        direction: "higher_better"
+        description: "产品首次检验合格的比率"
+  - area: "资产健康度"
     weight: 1.2
     kpis:
-      - name: "单位生产成本"
+      - name: "库存周转天数/金额"
         direction: "lower_better"
-        description: "单位产品的生产成本"
-      - name: "安全事故数"
-        direction: "lower_better"
-        description: "生产安全事故发生次数"
-      - name: "能耗效率"
-        direction: "higher_better"
-        description: "单位产出的能源消耗"
+        description: "成品库存的周转效率和金额"
 
 risk_factors:
-  - name: "产能瓶颈"
+  - name: "成本失控"
     severity: "high"
-    threshold: "计划达成率 < 85%"
+    threshold: "生产成本高于外部OEM对标"
+  - name: "计划达成率低"
+    severity: "high"
+    threshold: "生产计划达成率 < 85%"
   - name: "品质异常"
     severity: "high"
-    threshold: "一次合格率环比下降 > 5%"
-  - name: "安全事故"
-    severity: "high"
-    threshold: "发生任何安全事故"
+    threshold: "一次交检合格率大幅下降"
 
 analysis_prompt_extension: |
-  生产中心的核心职能是按质按量按时完成产品生产。审核经营分析资料时需要特别关注：
-  1. **产能与计划**：生产计划达成情况、产能利用率、瓶颈环节分析
-  2. **品质管理**：品质指标趋势、不良品根因分析、改善对策
-  3. **设备管理**：设备运行状态、OEE分析、维保计划执行
-  4. **成本控制**：生产成本构成、降本措施效果、浪费识别
-  5. **安全管理**：安全制度执行、隐患排查、事故分析
+  生产中心遵循ISC集成供应链链条。审核经营分析资料时需特别关注：
+  1. **生产成本控制率**：今年绝对的"一号指标"，自产vs外部OEM的成本对比
+  2. **生产计划达成率**：排程执行和交付效率
+  3. **成品一次交检合格率**：质量管控水平
+  4. **库存周转**：成品库存健康度和供应链协同效率
+  5. **BSC对齐**：是否紧密围绕"成本"、"效率"、"质量"、"资产健康度"四大制造核心命题
 
   常见质量问题：
-  - 生产数据只有总量，缺乏各产线/产品的维度分析
-  - 品质问题只报数据，缺乏根因追踪和系统改善对策
-  - 设备管理缺乏预防性维护计划和异常分析
+  - 缺乏与外部OEM的成本对比分析
+  - 成本分析只看总额，缺乏各环节拆解
+  - 库存数据未做结构和周转分析

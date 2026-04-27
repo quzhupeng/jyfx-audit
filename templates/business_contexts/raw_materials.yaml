@@ -1,62 +1,57 @@
 department: "原材料事业部"
-description: "负责原材料采购、仓储、加工与供应保障的业务部门"
-business_thread: "供应商开发→原料采购→品质检验→仓储管理→加工配送→成本优化"
+description: "以大客户战略为核心，实现B端商业模式突破的业务部门"
+business_thread: "明确大客户战略 → 集中资源攻坚标杆客户（品牌背书）→ 驱动B端持续采购 → 技术优势转市场壁垒 → 复制成功模式"
 
 focus_areas:
-  - area: "采购与成本"
+  - area: "大客户攻坚"
     weight: 1.5
     kpis:
-      - name: "采购成本节约率"
+      - name: "标杆客户突破"
         direction: "higher_better"
-        description: "实际采购成本低于预算的节约比率"
-      - name: "供应商开发数"
+        description: "成功签约/合作的标杆大客户数量"
+      - name: "客户阶段分布"
         direction: "higher_better"
-        description: "新开发的合格供应商数量"
-      - name: "采购及时率"
+        description: "测试/中试/商务谈判各阶段的客户数"
+      - name: "B端持续采购额"
         direction: "higher_better"
-        description: "按时完成采购订单的比率"
-  - area: "品质管理"
-    weight: 1.3
+        description: "B端客户的持续采购金额"
+  - area: "客户漏斗与转化"
+    weight: 1.4
     kpis:
-      - name: "来料合格率"
+      - name: "漏斗转化率"
         direction: "higher_better"
-        description: "通过品质检验的原材料批次占比"
-      - name: "供应商评级分布"
+        description: "从测试到成交各阶段的转化率"
+      - name: "未成交根因分析"
         direction: "higher_better"
-        description: "A/B/C级供应商的分布情况"
-  - area: "仓储与配送"
+        description: "测试未成交客户的根因分析覆盖率"
+  - area: "技术与协同"
     weight: 1.2
     kpis:
-      - name: "库存周转率"
+      - name: "销售与研发协同"
         direction: "higher_better"
-        description: "原材料库存的周转效率"
-      - name: "配送及时率"
-        direction: "higher_better"
-        description: "按时完成内部配送的比率"
-      - name: "损耗率"
-        direction: "lower_better"
-        description: "仓储和配送过程中的物料损耗比率"
+        description: "重点客户跟进中销售与研发的协同效率"
 
 risk_factors:
-  - name: "原料价格大幅波动"
+  - name: "标杆客户攻坚失败"
     severity: "high"
-    threshold: "核心原料价格环比波动 > 15%"
-  - name: "供应商集中风险"
+    threshold: "核心标杆客户流失或谈判停滞"
+  - name: "漏斗断裂"
+    severity: "high"
+    threshold: "大量测试客户无转化且无根因分析"
+  - name: "资源分散"
     severity: "medium"
-    threshold: "单一供应商占比 > 60%"
-  - name: "库存积压"
-    severity: "medium"
-    threshold: "超期库存占比 > 20%"
+    threshold: "业务力量未聚焦高价值大客户"
 
 analysis_prompt_extension: |
-  原材料事业部的核心业务是保障集团原材料供应的质量、成本和时效。审核经营分析资料时需要特别关注：
-  1. **采购策略**：供应商多元化、采购成本趋势、议价能力变化
-  2. **品质管控**：来料合格率变化趋势、不合格品的处理方式
-  3. **库存管理**：库存周转效率、积压和损耗情况、安全库存策略
-  4. **成本分析**：采购成本构成、降本措施效果、价格波动应对
-  5. **供应链韧性**：备选供应商、应急预案、供应链风险点
+  原材料事业部的核心是B端大客户战略的从零到一突破。审核经营分析资料时需特别关注：
+  1. **大客户聚焦**：业务力量是否真正聚焦于高价值大客户？是否集中资源打造标杆样板？
+  2. **客户阶段**：重点客户当前所处阶段（测试、中试、商务谈判）、预计成交时间
+  3. **内部资源调动**：为攻克大客户调动的研发、高层支持等资源是否到位
+  4. **漏斗分析**：大量进入测试但未成交的客户，是否有清晰的根因分析？转化卡点在哪里？
+  5. **协同效率**：销售与研发/技术的协同是否顺畅
+  6. **模式复制**：标杆成功后是否有可复制的模式
 
   常见质量问题：
-  - 采购成本分析缺乏与市场价格的对比
-  - 供应商管理只有数量，缺乏绩效分级和优化措施
-  - 库存数据未做ABC分类和周转率分析
+  - 缺乏客户漏斗的阶段数据和转化分析
+  - 未成交客户只说数量不说原因
+  - 未分析销售与研发协同中的问题

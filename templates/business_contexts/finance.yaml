@@ -1,59 +1,53 @@
 department: "财务部"
-description: "负责集团财务管理、资金运作、成本控制、税务筹划及经营分析的职能部门"
-business_thread: "预算编制→资金管理→成本管控→税务筹划→经营分析→风险预警"
+description: "负责集团财务管理、资金运作、成本控制及经营分析的职能部门"
+business_thread: "业财融合与精益财务，支撑集团战略落地，保障经营健康与价值增长"
 
 focus_areas:
-  - area: "预算与资金"
+  - area: "经营利润"
     weight: 1.5
     kpis:
-      - name: "预算执行率"
-        direction: "stable"
-        description: "各事业部/部门的预算执行偏差"
-      - name: "资金周转天数"
-        direction: "lower_better"
-        description: "资金从投入到回收的平均周期"
-      - name: "现金流健康度"
+      - name: "集团收入总额"
         direction: "higher_better"
-        description: "经营性现金流与净利润的匹配度"
-  - area: "成本管控"
+        description: "集团整体营业收入"
+      - name: "集团经营利润完成率"
+        direction: "higher_better"
+        description: "实际经营利润与目标的比率"
+  - area: "财务管控"
     weight: 1.3
     kpis:
-      - name: "费用率"
-        direction: "lower_better"
-        description: "管理费用/销售费用占收入比"
-      - name: "成本偏差率"
-        direction: "lower_better"
-        description: "实际成本与预算的偏差程度"
-  - area: "财务分析"
+      - name: "财务核算准确率"
+        direction: "higher_better"
+        description: "财务核算的准确程度"
+      - name: "生产成本控制率"
+        direction: "higher_better"
+        description: "生产成本的管控效果"
+      - name: "资产周转率"
+        direction: "higher_better"
+        description: "资产使用效率"
+  - area: "业财融合"
     weight: 1.2
     kpis:
-      - name: "报表及时率"
+      - name: "财务对业务的赋能效果"
         direction: "higher_better"
-        description: "财务报表按时出具的比率"
-      - name: "应收账款周转率"
-        direction: "higher_better"
-        description: "应收账款的回收效率"
+        description: "财务对业务决策的支撑深度"
 
 risk_factors:
-  - name: "现金流紧张"
+  - name: "利润未达标"
     severity: "high"
-    threshold: "经营性现金流连续为负"
-  - name: "应收账款风险"
+    threshold: "经营利润完成率 < 90%"
+  - name: "成本失控"
     severity: "high"
-    threshold: "超期应收占比 > 30%"
-  - name: "预算失控"
-    severity: "medium"
-    threshold: "整体预算偏差 > 15%"
+    threshold: "生产成本控制率大幅偏离"
 
 analysis_prompt_extension: |
-  财务部的核心职能是集团财务管控和经营分析支持。审核经营分析资料时需要特别关注：
-  1. **预算执行情况**：各事业部的预算vs实际对比、偏差原因分析
-  2. **资金效率**：现金流状况、资金周转效率、融资成本
-  3. **成本结构分析**：费用率变化趋势、异常费用项的根因
-  4. **应收管理**：应收账款账龄分布、坏账风险评估
-  5. **经营洞察**：对各事业部经营数据的深度分析和预警
+  财务部的核心是通过业财融合与精益财务支撑集团战略落地。审核经营分析资料时需特别关注：
+  1. **集团经营大盘**：收入总额、经营利润完成率的趋势和差异分析
+  2. **成本管控**：生产成本控制率的达成情况及偏差分析
+  3. **业财融合深度**：财务对业务前线的赋能效果，是否有具体的经营洞察和建议
+  4. **财务风险防控**：现金流、应收账款、资产周转等风险指标
+  5. **BSC对齐**：核心驱动力指标是否全面覆盖
 
   常见质量问题：
   - 只有数据罗列，缺乏预算-实际的差异分析和根因
-  - 现金流分析流于表面，未揭示资金效率问题
-  - 对事业部的经营分析缺乏深度洞察和改善建议
+  - 缺乏对各事业部经营数据的深度洞察
+  - 未体现财务对业务的赋能和价值增值
