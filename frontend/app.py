@@ -1,4 +1,4 @@
-"""经营分析会资料审核工具 — Streamlit 前端入口 (暖色商务风)."""
+"""经营分析会资料审核工具 — Streamlit 前端入口."""
 
 from __future__ import annotations
 
@@ -7,7 +7,6 @@ from pathlib import Path
 
 import streamlit as st
 
-# 确保项目根目录在 path 中
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
@@ -20,13 +19,13 @@ from services.content_checker import ContentChecker
 from services.ai_analyzer import analyze_content
 from services.report_generator import ReportGenerator
 
-# ---- 加载自定义 CSS ----
+# ---- Load custom CSS ----
 CSS_PATH = Path(__file__).parent / "static" / "style.css"
 if CSS_PATH.exists():
     with open(CSS_PATH, encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# 确保 Streamlit 环境下 API Key 生效
+# Load API key from Streamlit secrets
 if not settings.DEEPSEEK_API_KEY:
     try:
         _key = st.secrets.get("DEEPSEEK_API_KEY", "")
@@ -38,31 +37,23 @@ if not settings.DEEPSEEK_API_KEY:
 
 st.set_page_config(
     page_title="经营分析会资料审核",
-    page_icon="📋",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# ---- 部门中文映射 ----
 DEPT_LABELS = {
-    "direct_sales": "直销事业部",
-    "beauty": "美业事业部",
-    "digital_marketing": "数字营销",
-    "finance": "财务部",
-    "lingshen": "领参",
-    "audit": "纪审部",
-    "raw_materials": "原材料事业部",
-    "private_domain": "私域事业部",
-    "management_center": "管理中心",
-    "rd_center": "研发中心",
-    "stem_cell": "干细胞研究院",
-    "foreign_trade": "外贸事业部",
-    "production": "生产中心",
-    "default": "默认（未配置）",
+    "direct_sales": "直销事业部", "beauty": "美业事业部",
+    "digital_marketing": "数字营销", "finance": "财务部",
+    "lingshen": "领参", "audit": "纪审部",
+    "raw_materials": "原材料事业部", "private_domain": "私域事业部",
+    "management_center": "管理中心", "rd_center": "研发中心",
+    "stem_cell": "干细胞研究院", "foreign_trade": "外贸事业部",
+    "production": "生产中心", "default": "默认（未配置）",
 }
 
 # ================================================================
-# 侧边栏
+# Sidebar
 # ================================================================
 with st.sidebar:
     st.header("审核设置")
@@ -71,12 +62,10 @@ with st.sidebar:
     if not departments:
         departments = ["default"]
     department = st.selectbox(
-        "选择事业部",
-        departments,
+        "选择事业部", departments,
         format_func=lambda x: DEPT_LABELS.get(x, x),
     )
 
-    # 业务上下文
     if department != "default":
         ctx = loader.load_business_context(department)
         if ctx.business_thread:
@@ -92,7 +81,6 @@ with st.sidebar:
 
     st.divider()
 
-    # AI 开关
     ai_available = bool(settings.DEEPSEEK_API_KEY) or bool(settings.ANTHROPIC_API_KEY)
     if "ai_enabled" not in st.session_state:
         st.session_state.ai_enabled = ai_available
@@ -103,22 +91,18 @@ with st.sidebar:
         key="ai_enabled",
     )
     if not ai_available:
-        st.caption("未检测到 API Key，请在 .env 或 .streamlit/secrets.toml 设置 DEEPSEEK_API_KEY")
+        st.caption("未检测到 API Key，请在 .env 或 .streamlit/secrets.toml 设置")
 
     st.divider()
-    st.caption(
-        f"支持格式：PDF\n最大文件大小：{settings.UPLOAD_MAX_SIZE_MB}MB"
-    )
+    st.caption(f"支持格式：PDF | 最大 {settings.UPLOAD_MAX_SIZE_MB}MB")
 
 
 # ================================================================
-# 主内容区
+# Main Content
 # ================================================================
 st.title("经营分析会资料审核")
-st.caption("上传经营分析汇报材料，系统自动进行格式检查、内容审核和 AI 深度分析")
 
-# ---- 区域1：上传区 ----
-col_upload, col_info = st.columns([2, 1])
+col_upload, col_info = st.columns([2.2, 1])
 
 with col_upload:
     uploaded_file = st.file_uploader(
@@ -129,49 +113,43 @@ with col_upload:
     )
 
 with col_info:
-    # 部门信息卡片
     dept_label = DEPT_LABELS.get(department, department)
     if department != "default":
         ctx = loader.load_business_context(department)
+        thread_preview = (ctx.business_thread or "")[:120]
         st.markdown(
-            f'<div class="audit-card">'
-            f'<div style="font-size:0.8rem;color:#8C7E6F;margin-bottom:0.3rem;">当前事业部</div>'
-            f'<div style="font-size:1.2rem;font-weight:700;color:#3D3229;">{dept_label}</div>'
-            f'<div style="margin-top:0.6rem;font-size:0.8rem;color:#8C7E6F;line-height:1.5;">'
-            f'{(ctx.business_thread or "")[:120]}{"..." if ctx.business_thread and len(ctx.business_thread) > 120 else ""}'
-            f'</div></div>',
+            f'<div class="dept-card">'
+            f'<div class="dc-label">当前事业部</div>'
+            f'<div class="dc-name">{dept_label}</div>'
+            f'<div class="dc-thread">{thread_preview}{"..." if ctx.business_thread and len(ctx.business_thread) > 120 else ""}</div>'
+            f'</div>',
             unsafe_allow_html=True,
         )
     else:
         st.markdown(
-            '<div class="audit-card">'
-            '<div style="font-size:0.8rem;color:#8C7E6F;margin-bottom:0.3rem;">当前事业部</div>'
-            '<div style="font-size:1.2rem;font-weight:700;color:#3D3229;">请选择事业部</div>'
+            '<div class="dept-card">'
+            '<div class="dc-label">当前事业部</div>'
+            '<div class="dc-name">请选择事业部</div>'
             '</div>',
             unsafe_allow_html=True,
         )
 
-# ---- 区域2：审核按钮 ----
-st.markdown("---")
+# ---- Review button ----
 can_review = uploaded_file is not None
+start_review = st.button("开始审核", disabled=not can_review, type="primary")
 
-# "开始审核"按钮始终显示
-start_review = st.button("开始审核", disabled=not can_review, type="primary", use_container_width=False)
-
-# ---- 无文件时的占位提示 ----
 if not can_review:
-    st.info("请先上传 PDF 文件，然后点击「开始审核」")
+    st.info("上传 PDF 文件后点击「开始审核」")
     st.stop()
 
 # ================================================================
-# 基础审核流程（格式 + 内容）
+# Basic Review (format + content)
 # ================================================================
 if start_review:
     with st.spinner("正在审核中..."):
         file_bytes = uploaded_file.read()
         filename = uploaded_file.name
 
-        # 解析 PDF
         with st.status("解析 PDF 文件...", expanded=False) as status:
             try:
                 doc = parse_pdf(file_bytes, filename)
@@ -181,46 +159,30 @@ if start_review:
                 st.error(f"PDF 解析失败: {e}")
                 st.stop()
 
-        # 加载模板
         template = loader.load_template()
-
-        # 章节匹配
         section_map = match_all_chapters_flexible(doc, template)
 
-        # 格式检查
         format_checker = FormatChecker(template)
         format_report = format_checker.check(doc, section_map)
 
-        # 内容检查
         content_checker = ContentChecker(template)
         content_report = content_checker.check(doc, section_map)
 
-        # 生成初步报告（不含 AI）
         generator = ReportGenerator(template)
         report = generator.merge(
-            filename=filename,
-            department=department,
-            format_report=format_report,
-            content_report=content_report,
+            filename=filename, department=department,
+            format_report=format_report, content_report=content_report,
             ai_report=None,
         )
-
-        # 缓存到 session_state
         st.session_state.review_result = {
-            "doc": doc,
-            "stats": stats,
-            "template": template,
-            "section_map": section_map,
-            "format_report": format_report,
-            "content_report": content_report,
-            "ai_report": None,
-            "report": report,
+            "doc": doc, "stats": stats, "template": template,
+            "section_map": section_map, "format_report": format_report,
+            "content_report": content_report, "ai_report": None, "report": report,
         }
-    # 审核完成后触发 rerun，使 AI 按钮出现
     st.rerun()
 
 # ================================================================
-# AI 按钮 — 仅在审核完成后渲染
+# AI Button — only after review completes
 # ================================================================
 has_review = "review_result" in st.session_state and st.session_state.review_result is not None
 run_ai = False
@@ -228,34 +190,27 @@ run_ai = False
 if has_review:
     ai_report_done = st.session_state.review_result.get("ai_report") is not None
     ai_btn_disabled = not (ai_enabled and not ai_report_done)
-    ai_label = "启动 AI 深度分析"
-    run_ai = st.button(ai_label, disabled=ai_btn_disabled, type="secondary", use_container_width=False)
+    run_ai = st.button("启动 AI 深度分析", disabled=ai_btn_disabled, type="secondary")
 
 # ================================================================
-# AI 深度分析流程（手动触发）
+# AI Analysis
 # ================================================================
 if run_ai and has_review:
     rv = st.session_state.review_result
     with st.spinner("AI 深度分析中，请稍候..."):
         business_ctx = loader.load_business_context(department) if department != "default" else None
         ai_report = analyze_content(rv["doc"], rv["section_map"], business_ctx)
-
-        # 重新生成综合报告（含 AI）
         generator = ReportGenerator(rv["template"])
         report = generator.merge(
-            filename=rv["report"].filename,
-            department=department,
-            format_report=rv["format_report"],
-            content_report=rv["content_report"],
+            filename=rv["report"].filename, department=department,
+            format_report=rv["format_report"], content_report=rv["content_report"],
             ai_report=ai_report,
         )
-
-        # 更新 session_state
         st.session_state.review_result["ai_report"] = ai_report
         st.session_state.review_result["report"] = report
 
 # ================================================================
-# 结果展示区
+# Results
 # ================================================================
 has_review = "review_result" in st.session_state and st.session_state.review_result is not None
 if not has_review:
@@ -272,194 +227,157 @@ stats = rv["stats"]
 
 st.markdown("---")
 
-# ---- 顶部：综合评分 + 状态 ----
+# ---- Hero: Score + Status + AI ----
 status_color_map = {
-    "合格": ("status-pass", "#6AAF5C"),
-    "需改进": ("status-warn", "#E8A13A"),
-    "需要整改": ("status-fail", "#D4544E"),
-    "不合格": ("status-fail", "#D4544E"),
+    "合格": ("status-pass", "#5A9E50"),
+    "需改进": ("status-warn", "#CC8B2E"),
+    "需要整改": ("status-fail", "#C0443E"),
+    "不合格": ("status-fail", "#C0443E"),
 }
-status_class, status_hex = status_color_map.get(report.status, ("status-warn", "#8C7E6F"))
+status_class, status_hex = status_color_map.get(report.status, ("status-warn", "#9B8E80"))
 
-col_hero1, col_hero2, col_hero3 = st.columns([1, 1, 1])
+col_hero, col_ai = st.columns([2, 1])
 
-with col_hero1:
+with col_hero:
     st.markdown(
         f'<div class="score-hero">'
         f'<div class="score-value">{report.overall_score:.0f}</div>'
-        f'<div class="score-label">综合评分 / 100</div>'
+        f'<div class="score-divider"></div>'
+        f'<div class="score-status-wrap">'
+        f'<div style="font-size:0.72rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.05em;font-weight:500;">综合评分</div>'
+        f'<div style="margin-top:0.3rem;"><span class="status-badge {status_class}">{report.status}</span></div>'
+        f'</div>'
         f'</div>',
         unsafe_allow_html=True,
     )
 
-with col_hero2:
-    st.markdown(
-        f'<div class="audit-card" style="text-align:center;">'
-        f'<div style="font-size:0.85rem;color:#8C7E6F;margin-bottom:0.5rem;">审核状态</div>'
-        f'<div style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">'
-        f'<span class="status-badge {status_class}">{report.status}</span></div>'
-        f'<div style="font-size:0.78rem;color:#8C7E6F;margin-top:0.8rem;line-height:1.5;">'
-        f'{report.summary}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-
-with col_hero3:
-    ai_score_display = "未分析"
-    ai_score_color = "#8C7E6F"
+with col_ai:
+    ai_val = "--"
+    ai_color = "#9B8E80"
+    ai_hint = "点击上方按钮启动分析"
     if ai_report and ai_report.available:
-        ai_score_display = f"{ai_report.overall_score}/10"
-        ai_score_color = "#5A9BD5"
+        ai_val = f"{ai_report.overall_score}/10"
+        ai_color = "#4889B8"
+        ai_hint = "分析完成"
+    elif ai_report and ai_report.error_message:
+        ai_hint = ai_report.error_message[:50]
     st.markdown(
-        f'<div class="audit-card" style="text-align:center;">'
-        f'<div style="font-size:0.85rem;color:#8C7E6F;margin-bottom:0.5rem;">AI 深度分析</div>'
-        f'<div style="font-size:1.6rem;font-weight:700;color:{ai_score_color};">{ai_score_display}</div>'
-        f'<div style="font-size:0.75rem;color:#8C7E6F;margin-top:0.5rem;">'
-        f'{"点击上方按钮启动分析" if not ai_report else ("分析完成" if ai_report.available else ai_report.error_message)}'
-        f'</div>'
+        f'<div class="ai-status-card">'
+        f'<div class="ai-val" style="color:{ai_color};">{ai_val}</div>'
+        f'<div class="ai-label">AI 深度分析</div>'
+        f'<div class="ai-hint">{ai_hint}</div>'
         f'</div>',
         unsafe_allow_html=True,
     )
 
-# ---- 中部：三列指标卡 ----
-col_m1, col_m2, col_m3 = st.columns(3)
+# ---- Metric Strip ----
+fmt_pct = format_report.overall_score * 100
+cnt_pct = content_report.overall_score * 100
+fmt_color = "#5A9E50" if fmt_pct >= 80 else "#CC8B2E" if fmt_pct >= 60 else "#C0443E"
+cnt_color = "#5A9E50" if cnt_pct >= 80 else "#CC8B2E" if cnt_pct >= 60 else "#C0443E"
 
-with col_m1:
-    fmt_pct = format_report.overall_score * 100
-    fmt_color = "#6AAF5C" if fmt_pct >= 80 else "#E8A13A" if fmt_pct >= 60 else "#D4544E"
-    st.markdown(
-        f'<div class="metric-card">'
-        f'<div class="metric-value" style="color:{fmt_color};">{fmt_pct:.0f}<span style="font-size:0.9rem;">%</span></div>'
-        f'<div class="metric-label">格式评分</div>'
-        f'<div style="margin-top:0.5rem;">'
-        f'<div class="score-bar-bg"><div class="score-bar-fill" style="width:{fmt_pct}%;background:{fmt_color};"></div></div>'
+if ai_report and ai_report.available:
+    ai_pct = ai_report.overall_score / 10 * 100
+    ai_color = "#5A9E50" if ai_pct >= 80 else "#CC8B2E" if ai_pct >= 60 else "#C0443E"
+    ai_cell = (
+        f'<div class="metric-cell">'
+        f'<div class="mc-value" style="color:{ai_color};">{ai_report.overall_score}<span style="font-size:0.75rem;font-weight:400;">/10</span></div>'
+        f'<div class="mc-label">AI 评分</div>'
+        f'<div class="mc-bar-bg"><div class="mc-bar-fill" style="width:{ai_pct}%;background:{ai_color};"></div></div>'
+        f'<div class="mc-sub">{len(ai_report.dimensions)} 个维度</div>'
         f'</div>'
-        f'<div style="font-size:0.75rem;color:#8C7E6F;margin-top:0.4rem;">{format_report.total_issues} 个问题</div>'
-        f'</div>',
-        unsafe_allow_html=True,
+    )
+else:
+    ai_cell = (
+        '<div class="metric-cell">'
+        '<div class="mc-value" style="color:#9B8E80;">--</div>'
+        '<div class="mc-label">AI 评分</div>'
+        '<div class="mc-sub">尚未分析</div>'
+        '</div>'
     )
 
-with col_m2:
-    cnt_pct = content_report.overall_score * 100
-    cnt_color = "#6AAF5C" if cnt_pct >= 80 else "#E8A13A" if cnt_pct >= 60 else "#D4544E"
-    st.markdown(
-        f'<div class="metric-card">'
-        f'<div class="metric-value" style="color:{cnt_color};">{cnt_pct:.0f}<span style="font-size:0.9rem;">%</span></div>'
-        f'<div class="metric-label">内容评分</div>'
-        f'<div style="margin-top:0.5rem;">'
-        f'<div class="score-bar-bg"><div class="score-bar-fill" style="width:{cnt_pct}%;background:{cnt_color};"></div></div>'
-        f'</div>'
-        f'<div style="font-size:0.75rem;color:#8C7E6F;margin-top:0.4rem;">覆盖 {content_report.section_coverage:.0%}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
+st.markdown(
+    f'<div class="metric-strip">'
+    f'<div class="metric-cell">'
+    f'<div class="mc-value" style="color:{fmt_color};">{fmt_pct:.0f}<span style="font-size:0.75rem;font-weight:400;">%</span></div>'
+    f'<div class="mc-label">格式评分</div>'
+    f'<div class="mc-bar-bg"><div class="mc-bar-fill" style="width:{fmt_pct}%;background:{fmt_color};"></div></div>'
+    f'<div class="mc-sub">{format_report.total_issues} 个问题</div>'
+    f'</div>'
+    f'<div class="metric-cell">'
+    f'<div class="mc-value" style="color:{cnt_color};">{cnt_pct:.0f}<span style="font-size:0.75rem;font-weight:400;">%</span></div>'
+    f'<div class="mc-label">内容评分</div>'
+    f'<div class="mc-bar-bg"><div class="mc-bar-fill" style="width:{cnt_pct}%;background:{cnt_color};"></div></div>'
+    f'<div class="mc-sub">章节覆盖 {content_report.section_coverage:.0%}</div>'
+    f'</div>'
+    f'{ai_cell}'
+    f'</div>',
+    unsafe_allow_html=True,
+)
 
-with col_m3:
-    if ai_report and ai_report.available:
-        ai_pct = ai_report.overall_score / 10 * 100
-        ai_color = "#6AAF5C" if ai_pct >= 80 else "#E8A13A" if ai_pct >= 60 else "#D4544E"
-        st.markdown(
-            f'<div class="metric-card">'
-            f'<div class="metric-value" style="color:{ai_color};">{ai_report.overall_score}<span style="font-size:0.9rem;">/10</span></div>'
-            f'<div class="metric-label">AI 综合评分</div>'
-            f'<div style="margin-top:0.5rem;">'
-            f'<div class="score-bar-bg"><div class="score-bar-fill" style="width:{ai_pct}%;background:{ai_color};"></div></div>'
-            f'</div>'
-            f'<div style="font-size:0.75rem;color:#8C7E6F;margin-top:0.4rem;">{len(ai_report.dimensions)} 个维度</div>'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            '<div class="metric-card">'
-            '<div class="metric-value" style="color:#8C7E6F;">--</div>'
-            '<div class="metric-label">AI 综合评分</div>'
-            '<div style="font-size:0.75rem;color:#8C7E6F;margin-top:0.4rem;">尚未分析</div>'
-            '</div>',
-            unsafe_allow_html=True,
-        )
+# ---- Tabs ----
+tab1, tab2, tab3, tab4 = st.tabs(["格式审核", "内容审核", "AI 分析", "文档信息"])
 
-# ---- 底部：标签页详情 ----
-tab1, tab2, tab3, tab4 = st.tabs([
-    "格式审核",
-    "内容审核",
-    "AI 分析",
-    "文档信息",
-])
-
-# ---- Tab 1: 格式审核 ----
+# ---- Tab 1: Format Review ----
 with tab1:
     fmt_pct = format_report.overall_score * 100
-    fmt_color = "#6AAF5C" if fmt_pct >= 80 else "#E8A13A" if fmt_pct >= 60 else "#D4544E"
-
+    fmt_color = "#5A9E50" if fmt_pct >= 80 else "#CC8B2E" if fmt_pct >= 60 else "#C0443E"
     st.markdown(
-        f'<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">'
-        f'<span class="tab-section-title">格式审核</span>'
-        f'<span style="font-size:1.6rem;font-weight:800;color:{fmt_color};">{fmt_pct:.0f}%</span>'
-        f'<span style="font-size:0.8rem;color:#8C7E6F;">{format_report.total_issues} 个问题</span>'
-        f'</div>',
+        f'<div class="tab-section-title">格式审核 &mdash; {fmt_pct:.0f}% &nbsp;({format_report.total_issues} 个问题)</div>',
         unsafe_allow_html=True,
     )
-
     if format_report.total_issues == 0:
         st.success("未发现格式问题！")
 
-    category_labels = {"font": "字体", "size": "字号", "color": "颜色", "layout": "排版", "margin": "页边距"}
-    for category, label in category_labels.items():
+    for category, label in [("font", "字体"), ("size", "字号"), ("color", "颜色"), ("layout", "排版"), ("margin", "页边距")]:
         cat_issues = [i for i in format_report.issues if i.category == category]
         if not cat_issues:
             continue
         issues_html = ""
         for issue in cat_issues:
-            severity_icon = {"error": "🔴", "warning": "🟡", "info": "🔵"}.get(issue.severity, "⚪")
+            sev_dot = {"error": "red", "warning": "orange", "info": "blue"}.get(issue.severity, "gray")
             page_label = "文档级" if issue.page_number == 0 else f"第{issue.page_number}页"
-            snippet = f'<div style="font-size:0.78rem;color:#8C7E6F;margin-top:0.2rem;font-style:italic;">文字片段: {issue.text_snippet}</div>' if issue.text_snippet else ""
+            snippet = f'<div style="font-size:0.76rem;color:var(--c-muted);margin-top:0.15rem;font-style:italic;">{issue.text_snippet}</div>' if issue.text_snippet else ""
             issues_html += (
                 f'<div class="issue-item severity-{issue.severity}">'
-                f'<span class="issue-icon">{severity_icon}</span>'
-                f'<div class="issue-content">'
-                f'<strong>{page_label}</strong>: {issue.message}'
-                f'{snippet}'
-                f'</div></div>'
+                f'<span class="issue-icon" style="color:{sev_dot};">&#9679;</span>'
+                f'<div class="issue-content"><strong>{page_label}</strong> &mdash; {issue.message}{snippet}</div></div>'
             )
         with st.expander(f"{label} — {len(cat_issues)}个问题"):
             st.markdown(f'<div class="issue-list">{issues_html}</div>', unsafe_allow_html=True)
 
-# ---- Tab 2: 内容审核 ----
+# ---- Tab 2: Content Review ----
 with tab2:
     cnt_pct = content_report.overall_score * 100
-    cnt_color = "#6AAF5C" if cnt_pct >= 80 else "#E8A13A" if cnt_pct >= 60 else "#D4544E"
+    cnt_color = "#5A9E50" if cnt_pct >= 80 else "#CC8B2E" if cnt_pct >= 60 else "#C0443E"
     st.markdown(
-        f'<span class="tab-section-title">内容审核</span>'
-        f'<span style="font-size:1.6rem;font-weight:800;color:{cnt_color};margin-left:1rem;">{cnt_pct:.0f}%</span>',
+        f'<div class="tab-section-title">内容审核 &mdash; {cnt_pct:.0f}%</div>',
         unsafe_allow_html=True,
     )
 
-    # 三指标卡
-    cov_color = "#6AAF5C" if content_report.section_coverage >= 0.8 else "#E8A13A" if content_report.section_coverage >= 0.5 else "#D4544E"
-    ess_icon = "✅" if content_report.essential_complete else "❌"
-    ord_icon = "✅" if content_report.order_correct else "❌"
+    cov_color = "#5A9E50" if content_report.section_coverage >= 0.8 else "#CC8B2E" if content_report.section_coverage >= 0.5 else "#C0443E"
+    ess_icon = "&#10003;" if content_report.essential_complete else "&#10007;"
+    ord_icon = "&#10003;" if content_report.order_correct else "&#10007;"
     st.markdown(
         f'<div class="stat-grid-3">'
         f'<div class="stat-item"><div class="stat-num" style="color:{cov_color};">{content_report.section_coverage:.0%}</div><div class="stat-desc">章节覆盖</div></div>'
-        f'<div class="stat-item"><div class="stat-num">{ess_icon}</div><div class="stat-desc">核心章节完整</div></div>'
+        f'<div class="stat-item"><div class="stat-num">{ess_icon}</div><div class="stat-desc">核心章节</div></div>'
         f'<div class="stat-item"><div class="stat-num">{ord_icon}</div><div class="stat-desc">章节顺序</div></div>'
         f'</div>',
         unsafe_allow_html=True,
     )
 
-    # 章节检测列表
-    st.markdown('<span class="tab-section-title">章节检测</span>', unsafe_allow_html=True)
+    st.markdown('<div class="tab-section-title">章节检测</div>', unsafe_allow_html=True)
     chapters_html = ""
     for ch in section_map.sections:
         matched_cls = "matched" if ch.matched else "unmatched"
-        icon = "✅" if ch.matched else "❌"
-        conf_color = "#6AAF5C" if ch.confidence > 0.7 else "#E8A13A" if ch.confidence > 0.3 else "#D4544E"
+        icon = "&#10003;" if ch.matched else "&#10007;"
+        conf_color = "#5A9E50" if ch.confidence > 0.7 else "#CC8B2E" if ch.confidence > 0.3 else "#C0443E"
         conf_pct = ch.confidence * 100
-        meta_parts = [f"{len(ch.matched_keywords)}/{ch.total_keywords} 关键字", f"置信度 {conf_pct:.0f}%"]
+        meta_parts = [f"{len(ch.matched_keywords)}/{ch.total_keywords} kw", f"{conf_pct:.0f}%"]
         if ch.matched and ch.segment_info:
-            meta_parts.append(f"{ch.segment_info.page_count}页 {ch.segment_info.text_length}字")
-        meta_str = " · ".join(meta_parts)
+            meta_parts.append(f"{ch.segment_info.page_count}p {ch.segment_info.text_length}字")
+        meta_str = " &middot; ".join(meta_parts)
         chapters_html += (
             f'<div class="chapter-row {matched_cls}">'
             f'<span class="chapter-icon">{icon}</span>'
@@ -470,119 +388,86 @@ with tab2:
         )
     st.markdown(f'<div class="chapter-list">{chapters_html}</div>', unsafe_allow_html=True)
 
-    # 内容问题
     if content_report.total_issues > 0:
-        st.markdown(f'<span class="tab-section-title">内容问题 — {content_report.total_issues}个</span>', unsafe_allow_html=True)
+        st.markdown(f'<div class="tab-section-title">内容问题 &mdash; {content_report.total_issues}个</div>', unsafe_allow_html=True)
         issues_html = ""
         for issue in content_report.issues:
-            severity_icon = {"critical": "🔴", "error": "🟠", "warning": "🟡", "info": "🔵"}.get(issue.severity, "⚪")
             issues_html += (
                 f'<div class="issue-item severity-{issue.severity}">'
-                f'<span class="issue-icon">{severity_icon}</span>'
-                f'<div class="issue-content">'
-                f'<span class="issue-tag {issue.severity}">{issue.severity}</span>'
-                f'{issue.message}'
-                f'</div></div>'
+                f'<span class="issue-icon">&#9679;</span>'
+                f'<div class="issue-content"><span class="issue-tag {issue.severity}">{issue.severity}</span>{issue.message}</div></div>'
             )
         st.markdown(f'<div class="issue-list">{issues_html}</div>', unsafe_allow_html=True)
     else:
         st.success("未发现内容问题！")
 
-# ---- Tab 3: AI 分析 ----
+# ---- Tab 3: AI Analysis ----
 with tab3:
     if ai_report and ai_report.available:
         st.markdown(
-            f'<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.8rem;">'
-            f'<span class="tab-section-title">AI 内容分析</span>'
-            f'<span style="font-size:1.8rem;font-weight:800;color:#5A9BD5;">{ai_report.overall_score}/10</span>'
-            f'</div>',
+            f'<div class="tab-section-title">AI 内容分析 &mdash; {ai_report.overall_score}/10</div>',
             unsafe_allow_html=True,
         )
-
         if ai_report.summary:
-            st.markdown(
-                f'<div class="audit-card" style="margin-bottom:1rem;font-style:italic;color:#8C7E6F;">'
-                f'{ai_report.summary}</div>',
-                unsafe_allow_html=True,
-            )
+            st.markdown(f'<div class="summary-quote">{ai_report.summary}</div>', unsafe_allow_html=True)
 
         if ai_report.dimensions:
-            st.markdown('<span class="tab-section-title">维度评分</span>', unsafe_allow_html=True)
+            st.markdown('<div class="tab-section-title">维度评分</div>', unsafe_allow_html=True)
             dims_html = ""
             for dim in ai_report.dimensions:
                 dim_pct = dim.score / 10 * 100
-                dim_color = "#6AAF5C" if dim_pct >= 80 else "#E8A13A" if dim_pct >= 60 else "#D4544E"
-                suggestions_html = ""
+                dim_color = "#5A9E50" if dim_pct >= 80 else "#CC8B2E" if dim_pct >= 60 else "#C0443E"
+                sug_html = ""
                 if dim.suggestions:
-                    sug_items = "".join(f"<li>{s}</li>" for s in dim.suggestions)
-                    suggestions_html = f'<div style="margin-top:0.4rem;font-size:0.8rem;color:#8C7E6F;"><ul style="margin:0;padding-left:1.2rem;">{sug_items}</ul></div>'
+                    items = "".join(f"<li>{s}</li>" for s in dim.suggestions)
+                    sug_html = f'<div class="dim-suggestions"><ul>{items}</ul></div>'
                 dims_html += (
-                    f'<div class="audit-card" style="margin-bottom:0.6rem;">'
-                    f'<div style="display:flex;justify-content:space-between;align-items:center;">'
-                    f'<span style="font-weight:600;font-size:0.95rem;">{dim.name}</span>'
-                    f'<span style="font-weight:700;font-size:1.1rem;color:{dim_color};">{dim.score}/10</span>'
+                    f'<div class="dim-card">'
+                    f'<div class="dim-header">'
+                    f'<span class="dim-name">{dim.name}</span>'
+                    f'<span class="dim-score" style="color:{dim_color};">{dim.score}/10</span>'
                     f'</div>'
-                    f'<div style="margin:0.5rem 0;">'
-                    f'<div class="score-bar-bg"><div class="score-bar-fill" style="width:{dim_pct}%;background:{dim_color};"></div></div>'
-                    f'</div>'
-                    f'<div style="font-size:0.85rem;color:#3D3229;line-height:1.6;">{dim.comment}</div>'
-                    f'{suggestions_html}'
+                    f'<div class="dim-bar-bg"><div class="dim-bar-fill" style="width:{dim_pct}%;background:{dim_color};"></div></div>'
+                    f'<div class="dim-comment">{dim.comment}</div>'
+                    f'{sug_html}'
                     f'</div>'
                 )
             st.markdown(dims_html, unsafe_allow_html=True)
 
         if ai_report.risk_warnings:
-            st.markdown('<span class="tab-section-title">风险提示</span>', unsafe_allow_html=True)
+            st.markdown('<div class="tab-section-title">风险提示</div>', unsafe_allow_html=True)
             for risk in ai_report.risk_warnings:
                 st.warning(risk)
 
     elif ai_report and ai_report.error_message:
         st.warning(f"AI 分析不可用: {ai_report.error_message}")
     else:
-        st.info("AI 分析未执行。点击上方「启动 AI 深度分析」按钮开始分析。")
+        st.info("AI 分析未执行。点击上方「启动 AI 深度分析」按钮开始。")
 
-# ---- Tab 4: 文档信息 ----
+# ---- Tab 4: Document Info ----
 with tab4:
-    # 文档概览 — 深色大卡片
     st.markdown(
         f'<div class="doc-overview-card">'
-        f'<div class="doc-filename-bar" style="grid-column:1/-1;">'
-        f'<span class="doc-fn-icon">📄</span>'
+        f'<div class="doc-filename-bar">'
+        f'<span class="doc-fn-icon">&#128196;</span>'
         f'<span class="doc-fn-text">{doc.filename}</span>'
         f'</div>'
-        f'<div class="doc-overview-item">'
-        f'<div class="doc-ov-value">{doc.page_count}</div>'
-        f'<div class="doc-ov-label">总页数</div>'
-        f'</div>'
-        f'<div class="doc-overview-item">'
-        f'<div class="doc-ov-value">{stats["text_spans"]}</div>'
-        f'<div class="doc-ov-label">文字片段</div>'
-        f'</div>'
-        f'<div class="doc-overview-item">'
-        f'<div class="doc-ov-value">{stats["images"]}</div>'
-        f'<div class="doc-ov-label">图片/图表</div>'
-        f'</div>'
-        f'<div class="doc-overview-item">'
-        f'<div class="doc-ov-value">{section_map.matched_count}/{section_map.total_count}</div>'
-        f'<div class="doc-ov-label">已匹配章节</div>'
-        f'</div>'
+        f'<div class="doc-overview-item"><div class="doc-ov-value">{doc.page_count}</div><div class="doc-ov-label">总页数</div></div>'
+        f'<div class="doc-overview-item"><div class="doc-ov-value">{stats["text_spans"]}</div><div class="doc-ov-label">文字片段</div></div>'
+        f'<div class="doc-overview-item"><div class="doc-ov-value">{stats["images"]}</div><div class="doc-ov-label">图片/图表</div></div>'
+        f'<div class="doc-overview-item"><div class="doc-ov-value">{section_map.matched_count}/{section_map.total_count}</div><div class="doc-ov-label">已匹配章节</div></div>'
         f'</div>',
         unsafe_allow_html=True,
     )
 
-    # 字号分布 — 表格+条形图
-    st.markdown('<span class="tab-section-title">字号分布</span>', unsafe_allow_html=True)
+    st.markdown('<div class="tab-section-title">字号分布</div>', unsafe_allow_html=True)
     size_data = {}
     for s in stats["font_sizes"]:
         pt = int(s)
-        if pt >= 22:
-            cat, cat_cls = "标题级", "title"
-        elif pt >= 14:
-            cat, cat_cls = "小标题", "subtitle"
-        elif pt >= 10:
-            cat, cat_cls = "正文", "body"
-        else:
-            cat, cat_cls = "注释", "note"
+        if pt >= 22: cat, cat_cls = "标题", "title"
+        elif pt >= 14: cat, cat_cls = "小标题", "subtitle"
+        elif pt >= 10: cat, cat_cls = "正文", "body"
+        else: cat, cat_cls = "注释", "note"
         key = f"{pt}pt"
         if key not in size_data:
             size_data[key] = {"pt": pt, "count": 0, "cat": cat, "cat_cls": cat_cls}
@@ -595,16 +480,15 @@ with tab4:
         size_rows_html += (
             f'<div class="size-row">'
             f'<span class="size-label">{d["pt"]}pt <span class="size-cat {d["cat_cls"]}">{d["cat"]}</span></span>'
-            f'<span class="size-count">×{d["count"]}</span>'
+            f'<span class="size-count">{d["count"]}</span>'
             f'<div class="size-bar-wrap"><div class="size-bar-inner" style="width:{bar_w}%;"></div></div>'
             f'</div>'
         )
     st.markdown(f'<div class="size-table">{size_rows_html}</div>', unsafe_allow_html=True)
 
-    # 章节页数分布 — 自定义横向 bar
     matched_sections = [ch for ch in section_map.sections if ch.matched and ch.segment_info]
     if matched_sections:
-        st.markdown('<span class="tab-section-title">章节页数分布</span>', unsafe_allow_html=True)
+        st.markdown('<div class="tab-section-title">章节页数分布</div>', unsafe_allow_html=True)
         bars_html = ""
         max_pages = max(ch.segment_info.page_count for ch in matched_sections)
         for ch in matched_sections:
