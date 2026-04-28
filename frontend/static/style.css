@@ -256,3 +256,302 @@ hr {
   transition: opacity 0.2s;
 }
 .ai-btn-trigger:hover { opacity: 0.9; }
+
+/* ---------- Tab 内部组件 ---------- */
+
+/* 统计小卡片行 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.stat-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.stat-item {
+  background: var(--warm-bg-card);
+  border: 1px solid var(--warm-border);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+.stat-item .stat-num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--warm-text);
+}
+.stat-item .stat-desc {
+  font-size: 0.75rem;
+  color: var(--warm-text-light);
+  margin-top: 0.15rem;
+}
+
+/* 章节检测列表 */
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.chapter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--warm-bg-card);
+  border: 1px solid var(--warm-border);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  font-size: 0.88rem;
+}
+.chapter-row.matched { border-left: 3px solid var(--warm-success); }
+.chapter-row.unmatched { border-left: 3px solid var(--warm-error); opacity: 0.7; }
+.chapter-icon { font-size: 1rem; flex-shrink: 0; }
+.chapter-name { font-weight: 600; color: var(--warm-text); }
+.chapter-meta { margin-left: auto; font-size: 0.75rem; color: var(--warm-text-light); text-align: right; white-space: nowrap; }
+.conf-bar { width: 50px; height: 4px; background: var(--warm-bg-alt); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.conf-fill { height: 100%; border-radius: 2px; }
+
+/* 问题列表 */
+.issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.issue-item {
+  background: var(--warm-bg-card);
+  border: 1px solid var(--warm-border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.issue-item.severity-critical { border-left: 3px solid var(--warm-error); }
+.issue-item.severity-error { border-left: 3px solid var(--warm-error); }
+.issue-item.severity-warning { border-left: 3px solid var(--warm-warning); }
+.issue-item.severity-info { border-left: 3px solid var(--warm-info); }
+.issue-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.issue-content { flex: 1; color: var(--warm-text); }
+.issue-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+.issue-tag.critical { background: #FCE8E7; color: #C0392B; }
+.issue-tag.error { background: #FCE8E7; color: #D4544E; }
+.issue-tag.warning { background: #FFF3E0; color: #B8751A; }
+.issue-tag.info { background: #E3F0FC; color: #2E6DA4; }
+
+/* 字号分布标签 */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.tag-pill {
+  display: inline-block;
+  background: var(--warm-bg-alt);
+  color: var(--warm-text);
+  border: 1px solid var(--warm-border);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* 章节页数分布 — 自定义横向 bar */
+.section-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.section-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-bar-label {
+  width: 140px;
+  font-size: 0.8rem;
+  color: var(--warm-text);
+  text-align: right;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.section-bar-track {
+  flex: 1;
+  height: 18px;
+  background: var(--warm-bg-alt);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.section-bar-value {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--warm-primary), var(--warm-primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  min-width: 40px;
+  transition: width 0.5s ease;
+}
+.section-bar-value span {
+  font-size: 0.65rem;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 分类折叠卡 */
+.category-card {
+  background: var(--warm-bg-card);
+  border: 1px solid var(--warm-border);
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+}
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--warm-text);
+  background: var(--warm-bg-alt);
+}
+.category-header:hover { background: #EDE8E0; }
+.category-count {
+  background: var(--warm-primary);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.category-body {
+  padding: 0.6rem 1rem;
+}
+
+/* 选项卡区域的 section title */
+.tab-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--warm-text);
+  margin: 1.2rem 0 0.6rem 0;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--warm-primary);
+  display: inline-block;
+}
+
+/* ---------- 文档信息 Tab 专用 ---------- */
+
+/* 文档概览大卡片 */
+.doc-overview-card {
+  background: linear-gradient(135deg, #3D3229 0%, #5A4D40 100%);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.doc-overview-item {
+  text-align: center;
+  padding: 0.5rem 0;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.doc-overview-item:last-child { border-right: none; }
+.doc-overview-item .doc-ov-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.doc-overview-item .doc-ov-label {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  margin-top: 0.2rem;
+}
+/* 文件名单独显示 */
+.doc-filename-bar {
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.doc-filename-bar .doc-fn-icon { font-size: 1.1rem; }
+.doc-filename-bar .doc-fn-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* 字号分布表格 */
+.size-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+.size-row {
+  display: grid;
+  grid-template-columns: 120px 60px 1fr;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--warm-bg-card);
+  border: 1px solid var(--warm-border);
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+.size-label { font-weight: 600; color: var(--warm-text); }
+.size-count { font-weight: 700; color: var(--warm-primary); text-align: center; }
+.size-bar-wrap {
+  height: 6px;
+  background: var(--warm-bg-alt);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.size-bar-inner {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--warm-primary), var(--warm-primary-light));
+  transition: width 0.4s ease;
+}
+
+/* 字号类别 tag */
+.size-cat {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+  font-weight: 600;
+}
+.size-cat.title { background: #FDE8CD; color: #B8751A; }
+.size-cat.subtitle { background: #E3F0FC; color: #2E6DA4; }
+.size-cat.body { background: #E8F5E2; color: #3A7D2E; }
+.size-cat.note { background: #F0EDE8; color: #8C7E6F; }
