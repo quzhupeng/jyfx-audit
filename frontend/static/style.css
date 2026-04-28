@@ -11,8 +11,8 @@
   --c-cream: #FAF9F6;
   --c-surface: #FFFFFF;
   --c-surface-raised: #F7F5F1;
-  --c-charcoal: #2C241E;
-  --c-charcoal-soft: #5C4F42;
+  --c-charcoal: #4A3F35;
+  --c-charcoal-soft: #6B5F53;
   --c-muted: #9B8E80;
   --c-border: #E5DED5;
   --c-border-strong: #D1C7B9;
@@ -68,7 +68,7 @@ h3 { color: var(--c-charcoal-soft) !important; font-weight: 600 !important; }
   letter-spacing: 0.01em;
 }
 .stButton > button[kind="primary"]:hover {
-  background: #3E342C !important;
+  background: #5A4F45 !important;
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
