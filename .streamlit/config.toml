@@ -6,3 +6,8 @@ gatherUsageStats = false
 
 [theme]
 base = "light"
+primaryColor = "#E8913A"
+backgroundColor = "#FAFAF8"
+secondaryBackgroundColor = "#F0EDE8"
+textColor = "#3D3229"
+font = "sans serif"
