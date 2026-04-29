@@ -213,7 +213,9 @@ if run_ai and has_review:
         if ai_report.available:
             try:
                 import importlib
+                import models.review as _review_mod
                 import services.ai_analyzer as _ai_mod
+                importlib.reload(_review_mod)
                 importlib.reload(_ai_mod)
                 _gen_questions = _ai_mod.generate_meeting_questions
                 with st.spinner("正在生成提问建议..."):
