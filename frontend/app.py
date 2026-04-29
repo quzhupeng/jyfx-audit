@@ -211,12 +211,16 @@ if run_ai and has_review:
 
         # 生成提问建议（仅在 AI 分析成功时）
         if ai_report.available:
-            with st.spinner("正在生成提问建议..."):
+            try:
                 from services.ai_analyzer import generate_meeting_questions
-                questions_result = generate_meeting_questions(
-                    ai_report, rv["doc"], rv["section_map"], business_ctx,
-                )
-                st.session_state.review_result["meeting_questions"] = questions_result
+                with st.spinner("正在生成提问建议..."):
+                    questions_result = generate_meeting_questions(
+                        ai_report, rv["doc"], rv["section_map"], business_ctx,
+                    )
+                    st.session_state.review_result["meeting_questions"] = questions_result
+            except Exception as _mqe:
+                import traceback
+                st.error(f"提问建议加载失败:\n```\n{traceback.format_exc()}\n```")
 
 # ================================================================
 # Results
