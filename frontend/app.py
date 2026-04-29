@@ -201,11 +201,16 @@ if run_ai and has_review:
         business_ctx = loader.load_business_context(department) if department != "default" else None
         ai_report = analyze_content(rv["doc"], rv["section_map"], business_ctx)
         generator = ReportGenerator(rv["template"])
-        report = generator.merge(
-            filename=rv["report"].filename, department=department,
-            format_report=rv["format_report"], content_report=rv["content_report"],
-            ai_report=ai_report,
-        )
+        try:
+            report = generator.merge(
+                filename=rv["report"].filename, department=department,
+                format_report=rv["format_report"], content_report=rv["content_report"],
+                ai_report=ai_report,
+            )
+        except Exception as _merge_err:
+            import traceback
+            st.error(f"生成综合报告失败:\n```\n{traceback.format_exc()}\n```")
+            st.stop()
         st.session_state.review_result["ai_report"] = ai_report
         st.session_state.review_result["report"] = report
 

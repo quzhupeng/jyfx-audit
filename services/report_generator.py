@@ -84,7 +84,7 @@ class ReportGenerator:
             format_report=format_report,
             content_report=content_report,
             ai_report=ai_report or AIReport(),
-            overall_score=round(overall, 1),
+            overall_score=min(100.0, round(overall, 1)),
             status=status,
             summary="; ".join(summary_parts),
         )
