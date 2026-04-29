@@ -16,7 +16,7 @@ from services.pdf_parser import parse_pdf, get_document_stats
 from services.template_engine import match_all_chapters_flexible
 from services.format_checker import FormatChecker
 from services.content_checker import ContentChecker
-from services.ai_analyzer import analyze_content
+from services.ai_analyzer import analyze_content, generate_meeting_questions
 from services.report_generator import ReportGenerator
 
 # ---- Load custom CSS ----
@@ -209,6 +209,14 @@ if run_ai and has_review:
         st.session_state.review_result["ai_report"] = ai_report
         st.session_state.review_result["report"] = report
 
+        # 生成提问建议（仅在 AI 分析成功时）
+        if ai_report.available:
+            with st.spinner("正在生成提问建议..."):
+                questions_result = generate_meeting_questions(
+                    ai_report, rv["doc"], rv["section_map"], business_ctx,
+                )
+                st.session_state.review_result["meeting_questions"] = questions_result
+
 # ================================================================
 # Results
 # ================================================================
@@ -221,6 +229,7 @@ report = rv["report"]
 format_report = rv["format_report"]
 content_report = rv["content_report"]
 ai_report = rv["ai_report"]
+meeting_questions = rv.get("meeting_questions")
 section_map = rv["section_map"]
 doc = rv["doc"]
 stats = rv["stats"]
@@ -439,6 +448,37 @@ with tab3:
             for risk in ai_report.risk_warnings:
                 st.warning(risk)
 
+        # ---- 提问建议 ----
+        if meeting_questions and meeting_questions.available:
+            st.markdown('<div class="tab-section-title">经营分析会提问建议</div>', unsafe_allow_html=True)
+            if meeting_questions.opening_remark:
+                st.markdown(
+                    f'<div class="summary-quote">{meeting_questions.opening_remark}</div>',
+                    unsafe_allow_html=True,
+                )
+            questions_html = ""
+            for i, q in enumerate(meeting_questions.questions, 1):
+                cat_color_map = {"精准追问": "#4889B8", "战略质询": "#8B6914", "风险预警": "#C0443E"}
+                cat_color = cat_color_map.get(q.category, "#9B8E80")
+                diff_label = {"basic": "基础", "advanced": "进阶", "expert": "深度"}.get(q.difficulty, q.difficulty)
+                questions_html += (
+                    f'<div class="dim-card" style="margin-bottom:0.8rem;">'
+                    f'<div class="dim-header">'
+                    f'<span class="dim-name" style="font-size:0.92rem;">Q{i}. {q.question}</span>'
+                    f'</div>'
+                    f'<div style="margin-top:0.4rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">'
+                    f'<span style="background:{cat_color};color:#fff;padding:0.1rem 0.5rem;border-radius:3px;font-size:0.72rem;">{q.category}</span>'
+                    f'<span style="background:#f0ebe4;color:#4A3F35;padding:0.1rem 0.5rem;border-radius:3px;font-size:0.72rem;">{diff_label}</span>'
+                    f'<span style="font-size:0.76rem;color:var(--c-muted);">针对: {q.target_section}</span>'
+                    f'</div>'
+                    f'<div style="margin-top:0.4rem;font-size:0.82rem;color:var(--c-muted);line-height:1.5;">'
+                    f'<strong style="color:#6B5E50;">提问依据:</strong> {q.rationale}'
+                    f'</div>'
+                    f'</div>'
+                )
+            st.markdown(questions_html, unsafe_allow_html=True)
+        elif meeting_questions and meeting_questions.error_message:
+            st.warning(f"提问建议生成失败: {meeting_questions.error_message}")
     elif ai_report and ai_report.error_message:
         st.warning(f"AI 分析不可用: {ai_report.error_message}")
     else:

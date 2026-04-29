@@ -107,6 +107,31 @@ class AIReport(BaseModel):
     model_config = {"frozen": True}
 
 
+class MeetingQuestion(BaseModel):
+    """经营分析会提问建议的单条问题."""
+
+    category: str = Field(description="问题类别: 精准追问|战略质询|风险预警")
+    question: str = Field(description="具体问题文本")
+    rationale: str = Field(description="为什么问这个问题（基于材料的哪个发现）")
+    target_section: str = Field(default="", description="针对文档的哪个章节/内容")
+    difficulty: str = Field(default="basic", description="难度: basic|advanced|expert")
+
+    model_config = {"frozen": True}
+
+
+class MeetingQuestionsResult(BaseModel):
+    """经营分析会提问建议结果."""
+
+    available: bool = Field(default=False, description="是否生成成功")
+    error_message: str = Field(default="", description="错误信息")
+    questions: Tuple[MeetingQuestion, ...] = Field(
+        default_factory=tuple, description="提问建议列表"
+    )
+    opening_remark: str = Field(default="", description="开场白建议")
+
+    model_config = {"frozen": True}
+
+
 class ReviewReport(BaseModel):
     """综合审核报告."""
 
