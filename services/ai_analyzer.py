@@ -145,14 +145,39 @@ def _build_user_prompt(
     return "\n".join(parts)
 
 
+def _extract_json(text: str) -> dict:
+    """从 AI 响应中提取并解析 JSON，容忍常见格式问题."""
+    # 优先提取 ```json ... ``` 代码块
+    code_block = re.search(r'```(?:json)?\s*\n?([\s\S]*?)\n?```', text)
+    raw = code_block.group(1).strip() if code_block else text
+
+    # 提取最外层 { }
+    brace_match = re.search(r'\{[\s\S]*\}', raw)
+    if not brace_match:
+        raise ValueError(f"AI 响应中未找到 JSON: {text[:200]}")
+
+    json_str = brace_match.group()
+
+    # 尝试直接解析
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+
+    # 容错修复：移除尾部逗号（数组/对象末尾的 ,）和 JS 风格注释
+    json_str = re.sub(r',\s*([}\]])', r'\1', json_str)  # 尾部逗号
+    json_str = re.sub(r'//.*$', '', json_str, flags=re.MULTILINE)  # 单行注释
+    json_str = re.sub(r'/\*[\s\S]*?\*/', '', json_str)  # 多行注释
+
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"AI 返回的 JSON 无法解析: {e}\n原始内容: {json_str[:300]}")
+
+
 def _parse_ai_response(response_text: str) -> Tuple[List[AIDimension], float, str, List[str]]:
     """解析 AI 返回的 JSON."""
-    # 尝试提取 JSON 块
-    json_match = re.search(r'\{[\s\S]*\}', response_text)
-    if not json_match:
-        raise ValueError(f"AI 响应中未找到 JSON: {response_text[:200]}")
-
-    data = json.loads(json_match.group())
+    data = _extract_json(response_text)
 
     dimensions = tuple(
         AIDimension(
@@ -319,11 +344,7 @@ def _build_meeting_questions_user_prompt(
 
 def _parse_meeting_questions(response_text: str) -> Tuple[Tuple[MeetingQuestion, ...], str]:
     """解析提问建议的 JSON 响应."""
-    json_match = re.search(r'\{[\s\S]*\}', response_text)
-    if not json_match:
-        raise ValueError(f"AI 响应中未找到 JSON: {response_text[:200]}")
-
-    data = json.loads(json_match.group())
+    data = _extract_json(response_text)
 
     questions = tuple(
         MeetingQuestion(
