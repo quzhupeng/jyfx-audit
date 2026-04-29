@@ -16,7 +16,7 @@ from services.pdf_parser import parse_pdf, get_document_stats
 from services.template_engine import match_all_chapters_flexible
 from services.format_checker import FormatChecker
 from services.content_checker import ContentChecker
-from services.ai_analyzer import analyze_content, generate_meeting_questions
+from services.ai_analyzer import analyze_content
 from services.report_generator import ReportGenerator
 
 # ---- Load custom CSS ----
@@ -212,6 +212,7 @@ if run_ai and has_review:
         # 生成提问建议（仅在 AI 分析成功时）
         if ai_report.available:
             with st.spinner("正在生成提问建议..."):
+                from services.ai_analyzer import generate_meeting_questions
                 questions_result = generate_meeting_questions(
                     ai_report, rv["doc"], rv["section_map"], business_ctx,
                 )
