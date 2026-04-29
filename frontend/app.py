@@ -212,14 +212,9 @@ if run_ai and has_review:
         # 生成提问建议（仅在 AI 分析成功时）
         if ai_report.available:
             try:
-                import importlib
-                import models.review as _review_mod
-                import services.ai_analyzer as _ai_mod
-                importlib.reload(_review_mod)
-                importlib.reload(_ai_mod)
-                _gen_questions = _ai_mod.generate_meeting_questions
+                from services.meeting_questions import generate_meeting_questions
                 with st.spinner("正在生成提问建议..."):
-                    questions_result = _gen_questions(
+                    questions_result = generate_meeting_questions(
                         ai_report, rv["doc"], rv["section_map"], business_ctx,
                     )
                     st.session_state.review_result["meeting_questions"] = questions_result
