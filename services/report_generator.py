@@ -83,7 +83,7 @@ class ReportGenerator:
             review_timestamp=now,
             format_report=format_report,
             content_report=content_report,
-            ai_report=ai_report or AIReport(),
+            ai_report=ai_report.model_dump() if ai_report else AIReport(),
             overall_score=min(100.0, round(overall, 1)),
             status=status,
             summary="; ".join(summary_parts),
