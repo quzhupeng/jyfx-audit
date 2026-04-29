@@ -145,6 +145,31 @@ def _build_user_prompt(
     return "\n".join(parts)
 
 
+def _unescape_control_chars(s: str) -> str:
+    """将 JSON 字符串值中的控制字符转义（如字面换行符 → \\n）."""
+    result = []
+    in_str = False
+    escape = False
+    for ch in s:
+        if escape:
+            escape = False
+            result.append(ch)
+            continue
+        if ch == '\\' and in_str:
+            escape = True
+            result.append(ch)
+            continue
+        if ch == '"':
+            in_str = not in_str
+            result.append(ch)
+            continue
+        if in_str and ch in '\n\r\t':
+            result.append({'\\n': '\\n', '\\t': '\\t'}.get(ch, ch))
+            continue
+        result.append(ch)
+    return ''.join(result)
+
+
 def _extract_json(text: str) -> dict:
     """从 AI 响应中提取并解析 JSON，容忍常见格式问题."""
     # 优先提取 ```json ... ``` 代码块
@@ -158,17 +183,33 @@ def _extract_json(text: str) -> dict:
 
     json_str = brace_match.group()
 
-    # 尝试直接解析
     try:
         return json.loads(json_str)
     except json.JSONDecodeError:
         pass
 
-    # 容错修复：移除尾部逗号（数组/对象末尾的 ,）和 JS 风格注释
+    # ---- 第 1 轮修复 ----
     json_str = re.sub(r',\s*([}\]])', r'\1', json_str)  # 尾部逗号
     json_str = re.sub(r'//.*$', '', json_str, flags=re.MULTILINE)  # 单行注释
     json_str = re.sub(r'/\*[\s\S]*?\*/', '', json_str)  # 多行注释
 
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+
+    # ---- 第 2 轮修复：转义字符串中的控制字符 ----
+    json_str = _unescape_control_chars(json_str)
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+
+    # ---- 第 3 轮修复：补缺失的逗号 ----
+    # 对象属性间缺少逗号: }" → },"   ]" → ],"
+    json_str = re.sub(r'([}\]])"', r'\1,"', json_str)
+    # 数字/布尔/null 后面缺少逗号且后跟 "
+    json_str = re.sub(r'(\d|true|false|null)\s*\n\s*"', r'\1,\n"', json_str)
     try:
         return json.loads(json_str)
     except json.JSONDecodeError as e:
